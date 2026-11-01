@@ -61,3 +61,34 @@ export async function getFeaturedStudios(): Promise<Studio[]> {
     throw error;
   }
 }
+
+// Get a single studio by ID (for the Studio Details page)
+export async function getStudioById(id: string): Promise<Studio> {
+  if (!API_URL) {
+    throw new Error("API URL is not configured");
+  }
+
+  const response = await fetch(`${API_URL}/api/studios/${id}`, {
+    cache: "no-store",
+  });
+
+  if (response.status === 404) {
+    throw new Error("Studio not found");
+  }
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch studio details");
+  }
+
+  const result: {
+    success: boolean;
+    message: string;
+    data: Studio;
+  } = await response.json();
+
+  if (!result.success) {
+    throw new Error(result.message || "Could not retrieve studio details");
+  }
+
+  return result.data;
+}
