@@ -27,7 +27,7 @@ export default async function FeaturedStudios() {
   } catch (error) {
     console.error("Failed to load featured studios:", error);
   }
-
+ 
   return (
     <section
        id="featured-studios"
