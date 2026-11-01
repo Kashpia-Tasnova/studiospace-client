@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -18,17 +19,17 @@ import {
 
 const quickLinks = [
   { name: "Home", href: "/" },
-  { name: "Explore Studios", href: "/studios" },
-  { name: "How It Works", href: "/how-it-works" },
+  { name: "Explore Studios", href: "/#featured-studios" },
+  { name: "How It Works", href: "/#how-it-works" },
   { name: "About Us", href: "/about" },
 ];
 
 const categories = [
-  { name: "Photo Studios", slug: "photo-studios" },
-  { name: "Film Stages", slug: "film-stages" },
-  { name: "Podcast Rooms", slug: "podcast-rooms" },
-  { name: "Music Suites", slug: "music-suites" },
-  { name: "Art Workshops", slug: "art-workshops" },
+  { name: "Photography Studios", value: "Photography" },
+  { name: "Music Studios", value: "Music" },
+  { name: "Podcast Rooms", value: "Podcast" },
+  { name: "Art Workshops", value: "Art & Design" },
+  { name: "Dance Studios", value: "Dance" },
 ];
 
 const socialLinks = [
@@ -127,8 +128,10 @@ export default function Footer() {
 
             <ul>
               {categories.map((category) => (
-                <li key={category.slug}>
-                  <Link href={`/studios?category=${category.slug}`}>
+                <li key={category.value}>
+                  <Link
+                    href={`/studios?category=${encodeURIComponent(category.value)}`}
+                  >
                     {category.name}
                   </Link>
                 </li>

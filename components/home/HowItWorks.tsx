@@ -40,7 +40,10 @@ const steps = [
 
 export default function HowItWorks() {
   return (
-    <section className="bg-[#F8F5F0] px-5 py-20 sm:px-8 lg:px-16 lg:py-28">
+    <section
+       id="how-it-works"
+       className="scroll-mt-24 bg-[#F8F5F0] px-5 py-20 sm:px-8 lg:px-16 lg:py-28"
+    >
       <div className="mx-auto max-w-7xl">
 
         {/* Section Heading */}

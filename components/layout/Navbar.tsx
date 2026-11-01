@@ -1,25 +1,91 @@
+
 "use client";
 
 import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Menu, X } from "lucide-react";
 
 const navLinks = [
   { name: "Home", href: "/" },
-  { name: "Explore Studios", href: "/studios" },
-  { name: "How It Works", href: "/how-it-works" },
+  { name: "Explore Studios", href: "/#featured-studios" },
+  { name: "How It Works", href: "/#how-it-works" },
   { name: "About Us", href: "/about" },
 ];
 
 export default function Navbar() {
   const pathname = usePathname();
-  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
 
+  const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+
+  // Detect the currently visible homepage section
+  useEffect(() => {
+    if (pathname !== "/") {
+      return;
+    }
+
+    const sections = [
+      { id: "featured-studios", name: "featured-studios" },
+      { id: "how-it-works", name: "how-it-works" },
+    ];
+
+    const updateActiveSection = () => {
+      const scrollPosition = window.scrollY + 150;
+
+      let currentSection = "home";
+
+      for (const section of sections) {
+        const element = document.getElementById(section.id);
+
+        if (!element) continue;
+
+        const sectionTop =
+          element.getBoundingClientRect().top + window.scrollY;
+
+        if (scrollPosition >= sectionTop) {
+          currentSection = section.name;
+        }
+      }
+
+      setActiveSection(currentSection);
+    };
+
+    const handleNavigation = () => {
+      requestAnimationFrame(updateActiveSection);
+    };
+
+    // Initial detection
+    handleNavigation();
+
+    // Listen for scrolling and navigation changes
+    window.addEventListener("scroll", handleNavigation, {
+      passive: true,
+    });
+
+    window.addEventListener("hashchange", handleNavigation);
+    window.addEventListener("resize", handleNavigation);
+
+    return () => {
+      window.removeEventListener("scroll", handleNavigation);
+      window.removeEventListener("hashchange", handleNavigation);
+      window.removeEventListener("resize", handleNavigation);
+    };
+  }, [pathname]);
+
+  // Determine the active navigation link
   const isActive = (href: string) => {
     if (href === "/") {
-      return pathname === "/";
+      return pathname === "/" && activeSection === "home";
+    }
+
+    if (href === "/#featured-studios") {
+      return pathname === "/" && activeSection === "featured-studios";
+    }
+
+    if (href === "/#how-it-works") {
+      return pathname === "/" && activeSection === "how-it-works";
     }
 
     return pathname === href || pathname.startsWith(`${href}/`);

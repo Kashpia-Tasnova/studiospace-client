@@ -29,7 +29,10 @@ export default async function FeaturedStudios() {
   }
 
   return (
-    <section className="bg-[#F5F0E8] px-5 py-20 sm:px-8 lg:px-16 lg:py-28">
+    <section
+       id="featured-studios"
+       className="scroll-mt-24 bg-[#F5F0E8] px-5 py-20 sm:px-8 lg:px-16 lg:py-28"
+    >
       <div className="mx-auto max-w-7xl">
 
         {/* Section Heading */}
