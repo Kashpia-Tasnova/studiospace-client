@@ -10,8 +10,14 @@ export interface Studio {
   status: string;
   rating?: number;
   createdAt?: string;
+  images?: string[];
+  amenities?: string[];
+  host?: {
+    name: string;
+    email: string;
+    profileImage?: string;
+  };
 }
-
 interface StudiosApiResponse {
   success: boolean;
   message: string;
