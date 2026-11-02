@@ -1,6 +1,17 @@
+
 import StudioListing from "@/components/studios/StudioListing";
 
-export default function StudiosPage() {
+interface StudiosPageProps {
+  searchParams: Promise<{
+    category?: string;
+  }>;
+}
+
+export default async function StudiosPage({
+  searchParams,
+}: StudiosPageProps) {
+  const params = await searchParams;
+
   return (
     <main className="min-h-screen bg-[#F8F5F0] px-5 py-16 sm:px-8 lg:px-16">
       <div className="mx-auto max-w-7xl">
@@ -24,7 +35,7 @@ export default function StudiosPage() {
         </div>
 
         {/* Studio Listings */}
-        <StudioListing />
+        <StudioListing initialCategory={params.category || "all"} />
       </div>
     </main>
   );
