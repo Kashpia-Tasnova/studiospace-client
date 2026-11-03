@@ -394,7 +394,7 @@ export default function HostBookingsPage() {
             {bookings.length === 0 && (
               <Link
                 href="/my-listings"
-                className="inline-flex items-center gap-2 mt-5 rounded-lg bg-[#604438] px-5 py-3 text-sm font-semibold text-white hover:bg-[#493329] transition"
+                className="inline-flex items-center gap-2 mt-5 rounded-lg bg-[#795548] px-5 py-3 text-sm font-semibold !text-white transition-colors duration-200 hover:bg-[#30251F] hover:!text-white"
               >
                 <Building2 size={17} />
                 View My Studios

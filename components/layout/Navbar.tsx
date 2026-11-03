@@ -13,6 +13,7 @@ import {
   PlusCircle,
   Building2,
   CalendarDays,
+  CalendarCheck,
   LogOut,
   UserRound,
 } from "lucide-react";
@@ -21,7 +22,7 @@ import { authClient } from "@/lib/auth-client";
 
 const navLinks = [
   { name: "Home", href: "/" },
-  { name: "Explore Studios",href: "/studios" },
+  { name: "Explore Studios", href: "/studios" },
   { name: "How It Works", href: "/#how-it-works" },
   { name: "About Us", href: "/about" },
 ];
@@ -327,6 +328,14 @@ export default function Navbar() {
                       <CalendarDays size={16} />
                       My Bookings
                     </Link>
+
+                    <Link
+                      href="/host-bookings"
+                      className="flex items-center gap-2.5 px-3.5 py-2 text-xs text-[#49382E] transition hover:bg-[#F8F5F0]"
+                    >
+                      <CalendarCheck size={16} />
+                      Manage Bookings
+                    </Link>
                   </div>
 
                   <div className="border-t border-[#EFE7E0] pt-1">
@@ -474,6 +483,15 @@ export default function Navbar() {
               >
                 <CalendarDays size={16} />
                 My Bookings
+              </Link>
+
+              <Link
+                href="/host-bookings"
+                className="navbar-mobile-link flex items-center gap-2.5"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <CalendarCheck size={16} />
+                Manage Bookings
               </Link>
 
               <button
