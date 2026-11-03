@@ -3,9 +3,21 @@
 
 import Image from "next/image";
 import Link from "next/link";
-import { usePathname } from "next/navigation";
+import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
-import { Menu, X } from "lucide-react";
+import {
+  Menu,
+  X,
+  ChevronDown,
+  LayoutDashboard,
+  PlusCircle,
+  Building2,
+  CalendarDays,
+  LogOut,
+  UserRound,
+} from "lucide-react";
+import { toast } from "sonner";
+import { authClient } from "@/lib/auth-client";
 
 const navLinks = [
   { name: "Home", href: "/" },
@@ -16,13 +28,42 @@ const navLinks = [
 
 export default function Navbar() {
   const pathname = usePathname();
+  const router = useRouter();
+
+  const { data: session, isPending } = authClient.useSession();
 
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [activeSection, setActiveSection] = useState("home");
+  const [profileMenuOpen, setProfileMenuOpen] = useState(false);
+  const [isProfileHovered, setIsProfileHovered] = useState(false);
+  const [isLoggingOut, setIsLoggingOut] = useState(false);
+
+  const user = session?.user;
+
+  // Scroll to the top when Home is clicked
+  const handleHomeClick = (event: React.MouseEvent<HTMLAnchorElement>) => {
+    event.preventDefault();
+
+    setActiveSection("home");
+    setMobileMenuOpen(false);
+    setProfileMenuOpen(false);
+
+    if (pathname === "/") {
+      window.history.replaceState(null, "", "/");
+
+      window.scrollTo({
+        top: 0,
+        behavior: "smooth",
+      });
+    } else {
+      router.push("/");
+    }
+  };
 
   // Detect the currently visible homepage section
   useEffect(() => {
     if (pathname !== "/") {
+      setActiveSection("home");
       return;
     }
 
@@ -56,10 +97,8 @@ export default function Navbar() {
       requestAnimationFrame(updateActiveSection);
     };
 
-    // Initial detection
     handleNavigation();
 
-    // Listen for scrolling and navigation changes
     window.addEventListener("scroll", handleNavigation, {
       passive: true,
     });
@@ -72,6 +111,13 @@ export default function Navbar() {
       window.removeEventListener("hashchange", handleNavigation);
       window.removeEventListener("resize", handleNavigation);
     };
+  }, [pathname]);
+
+  // Close menus when navigating to another page
+  useEffect(() => {
+    setProfileMenuOpen(false);
+    setMobileMenuOpen(false);
+    setIsProfileHovered(false);
   }, [pathname]);
 
   // Determine the active navigation link
@@ -91,16 +137,47 @@ export default function Navbar() {
     return pathname === href || pathname.startsWith(`${href}/`);
   };
 
+  // Logout
+  const handleLogout = async () => {
+    if (isLoggingOut) return;
+
+    setIsLoggingOut(true);
+
+    try {
+      const { error } = await authClient.signOut();
+
+      if (error) {
+        toast.error(error.message || "Unable to log out. Please try again.");
+        return;
+      }
+
+      setProfileMenuOpen(false);
+      setMobileMenuOpen(false);
+
+      toast.success("You have logged out successfully.");
+
+      router.push("/");
+      router.refresh();
+    } catch {
+      toast.error("Something went wrong. Please try again.");
+    } finally {
+      setIsLoggingOut(false);
+    }
+  };
+
+  // User avatar information
+  const avatar = user?.image;
+  const userInitial = user?.name?.charAt(0)?.toUpperCase() || "U";
+
   return (
     <header className="navbar">
       <div className="navbar-container">
-
         {/* Logo */}
         <Link
           href="/"
           className="navbar-logo"
           aria-label="StudioSpace Home"
-          onClick={() => setMobileMenuOpen(false)}
+          onClick={handleHomeClick}
         >
           <Image
             src="/logo.png"
@@ -118,6 +195,11 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
+              onClick={
+                link.href === "/"
+                  ? handleHomeClick
+                  : undefined
+              }
               className={`navbar-link ${
                 isActive(link.href) ? "active" : ""
               }`}
@@ -128,11 +210,137 @@ export default function Navbar() {
           ))}
         </nav>
 
-        {/* Login Button */}
+        {/* Desktop Authentication */}
         <div className="navbar-actions">
-          <Link href="/login" className="navbar-login-button">
-            Log In
-          </Link>
+          {!isPending && !user && (
+            <>
+              <Link href="/login" className="navbar-login-button">
+                Log In
+              </Link>
+
+              <Link href="/register" className="navbar-register-button">
+                Register
+              </Link>
+            </>
+          )}
+
+          {!isPending && user && (
+            <div
+              className="relative"
+              onMouseEnter={() => setIsProfileHovered(true)}
+              onMouseLeave={() => setIsProfileHovered(false)}
+            >
+              <button
+                type="button"
+                onClick={() => setProfileMenuOpen((previous) => !previous)}
+                className={`flex items-center rounded-full border border-[#E5D8CD] bg-white py-1.5 transition-all duration-300 hover:bg-[#F8F5F0] ${
+                  isProfileHovered || profileMenuOpen
+                    ? "gap-2 pl-1.5 pr-3"
+                    : "justify-center px-1.5"
+                }`}
+                aria-expanded={profileMenuOpen}
+                aria-label="Open profile menu"
+              >
+                {avatar ? (
+                  <img
+                    src={avatar}
+                    alt={user.name || "User"}
+                    className="h-[42px] w-[42px] shrink-0 rounded-full border border-[#E5D8CD] object-cover"
+                  />
+                ) : (
+                  <span className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full bg-[#795548] text-base font-semibold text-white">
+                    {userInitial}
+                  </span>
+                )}
+
+                <span
+                  className={`overflow-hidden whitespace-nowrap text-sm font-semibold text-[#49382E] transition-all duration-300 ${
+                    isProfileHovered || profileMenuOpen
+                      ? "max-w-36 opacity-100"
+                      : "max-w-0 opacity-0"
+                  }`}
+                >
+                  {user.name}
+                </span>
+
+                <ChevronDown
+                  size={20}
+                  className={`shrink-0 overflow-hidden text-[#604438] transition-all duration-300 ${
+                    isProfileHovered || profileMenuOpen
+                      ? "max-w-5 opacity-100"
+                      : "max-w-0 opacity-0"
+                  } ${profileMenuOpen ? "rotate-180" : ""}`}
+                />
+              </button>
+
+              {profileMenuOpen && (
+                <div className="absolute right-0 top-full z-50 mt-3 w-64 overflow-hidden rounded-xl border border-[#E8D9CC] bg-white py-2 shadow-xl">
+                  <div className="border-b border-[#EFE7E0] px-4 py-3">
+                    <p className="truncate text-sm font-semibold text-[#352820]">
+                      {user.name}
+                    </p>
+                    <p className="truncate text-xs text-[#82766F]">
+                      {user.email}
+                    </p>
+                  </div>
+
+                  <div className="py-2">
+                    <Link
+                      href="/my-profile"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#49382E] transition hover:bg-[#F8F5F0]"
+                    >
+                      <UserRound size={18} />
+                      My Profile
+                    </Link>
+
+                    <Link
+                      href="/dashboard"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#49382E] transition hover:bg-[#F8F5F0]"
+                    >
+                      <LayoutDashboard size={18} />
+                      Dashboard
+                    </Link>
+
+                    <Link
+                      href="/add-studio"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#49382E] transition hover:bg-[#F8F5F0]"
+                    >
+                      <PlusCircle size={18} />
+                      Add New Studio
+                    </Link>
+
+                    <Link
+                      href="/my-listings"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#49382E] transition hover:bg-[#F8F5F0]"
+                    >
+                      <Building2 size={18} />
+                      My Studio Listings
+                    </Link>
+
+                    <Link
+                      href="/my-bookings"
+                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#49382E] transition hover:bg-[#F8F5F0]"
+                    >
+                      <CalendarDays size={18} />
+                      My Bookings
+                    </Link>
+                  </div>
+
+                  <div className="border-t border-[#EFE7E0] pt-2">
+                    <button
+                      type="button"
+                      onClick={handleLogout}
+                      disabled={isLoggingOut}
+                      className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-red-600 transition hover:bg-red-50 disabled:opacity-60"
+                    >
+                      <LogOut size={18} />
+                      {isLoggingOut ? "Logging out..." : "Logout"}
+                    </button>
+                  </div>
+                </div>
+              )}
+            </div>
+          )}
         </div>
 
         {/* Mobile Menu Button */}
@@ -143,7 +351,7 @@ export default function Navbar() {
           aria-label={mobileMenuOpen ? "Close menu" : "Open menu"}
           aria-expanded={mobileMenuOpen}
         >
-          {mobileMenuOpen ? <X size={23} /> : <Menu size={23} />}
+          {mobileMenuOpen ? <X size={26} /> : <Menu size={26} />}
         </button>
       </div>
 
@@ -157,19 +365,120 @@ export default function Navbar() {
               className={`navbar-mobile-link ${
                 isActive(link.href) ? "active" : ""
               }`}
-              onClick={() => setMobileMenuOpen(false)}
+              onClick={(event) => {
+                if (link.href === "/") {
+                  handleHomeClick(event);
+                } else {
+                  setMobileMenuOpen(false);
+                }
+              }}
             >
               {link.name}
             </Link>
           ))}
 
-          <Link
-            href="/login"
-            className="navbar-mobile-login"
-            onClick={() => setMobileMenuOpen(false)}
-          >
-            Log In
-          </Link>
+          {/* Mobile Authentication */}
+          {!isPending && !user && (
+            <>
+              <Link
+                href="/login"
+                className="navbar-mobile-login"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Log In
+              </Link>
+
+              <Link
+                href="/register"
+                className="navbar-mobile-register"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                Register
+              </Link>
+            </>
+          )}
+
+          {!isPending && user && (
+            <div className="mt-3 border-t border-[#E8D9CC] pt-4">
+              <div className="mb-3 flex items-center gap-3 px-2">
+                {avatar ? (
+                  <img
+                    src={avatar}
+                    alt={user.name || "User"}
+                    className="h-[42px] w-[42px] rounded-full border border-[#E5D8CD] object-cover"
+                  />
+                ) : (
+                  <span className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-[#795548] text-base font-semibold text-white">
+                    {userInitial}
+                  </span>
+                )}
+
+                <div className="min-w-0">
+                  <p className="truncate text-sm font-semibold text-[#352820]">
+                    {user.name}
+                  </p>
+                  <p className="truncate text-xs text-[#82766F]">
+                    {user.email}
+                  </p>
+                </div>
+              </div>
+
+              <Link
+                href="/my-profile"
+                className="navbar-mobile-link flex items-center gap-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <UserRound size={18} />
+                My Profile
+              </Link>
+
+              <Link
+                href="/dashboard"
+                className="navbar-mobile-link flex items-center gap-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <LayoutDashboard size={18} />
+                Dashboard
+              </Link>
+
+              <Link
+                href="/add-studio"
+                className="navbar-mobile-link flex items-center gap-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <PlusCircle size={18} />
+                Add New Studio
+              </Link>
+
+              <Link
+                href="/my-listings"
+                className="navbar-mobile-link flex items-center gap-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Building2 size={18} />
+                My Studio Listings
+              </Link>
+
+              <Link
+                href="/my-bookings"
+                className="navbar-mobile-link flex items-center gap-3"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <CalendarDays size={18} />
+                My Bookings
+              </Link>
+
+              <button
+                type="button"
+                onClick={handleLogout}
+                disabled={isLoggingOut}
+                className="mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-60"
+              >
+                <LogOut size={18} />
+                {isLoggingOut ? "Logging out..." : "Logout"}
+              </button>
+            </div>
+          )}
         </nav>
       )}
     </header>
