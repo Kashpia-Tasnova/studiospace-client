@@ -287,7 +287,7 @@ export default function RegisterPage() {
             <form onSubmit={handleRegister} className="space-y-3.5">
 
               {/* Name and Email */}
-              <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+              <div className="space-y-3.5">
                 <div className="min-w-0">
                   <label
                     htmlFor="name"
