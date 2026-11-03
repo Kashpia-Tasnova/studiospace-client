@@ -1,7 +1,7 @@
 
 "use client";
 
-import { useEffect, useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent, type ChangeEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
   UserRound,
@@ -13,9 +13,13 @@ import {
   ChevronDown,
   ChevronUp,
   X,
+  Upload,
 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
 
 export default function MyProfilePage() {
   const router = useRouter();
@@ -25,6 +29,9 @@ export default function MyProfilePage() {
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
   const [image, setImage] = useState("");
+
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState("");
 
   const [hasCredentialAccount, setHasCredentialAccount] = useState(false);
   const [checkingAccounts, setCheckingAccounts] = useState(true);
@@ -37,6 +44,7 @@ export default function MyProfilePage() {
   const [newPassword, setNewPassword] = useState("");
   const [confirmPassword, setConfirmPassword] = useState("");
 
+  // Load the current user's profile information.
   useEffect(() => {
     if (user) {
       setName(user.name || "");
@@ -45,12 +53,14 @@ export default function MyProfilePage() {
     }
   }, [user]);
 
+  // Redirect unauthenticated users to Login.
   useEffect(() => {
     if (!isPending && !session) {
       router.replace("/login");
     }
   }, [isPending, session, router]);
 
+  // Check whether the user has an email/password account.
   useEffect(() => {
     let isMounted = true;
 
@@ -92,6 +102,85 @@ export default function MyProfilePage() {
     };
   }, [user]);
 
+  // Create and clean up the local image preview.
+  useEffect(() => {
+    if (!selectedImage) {
+      setPreviewImage("");
+      return;
+    }
+
+    const objectUrl = URL.createObjectURL(selectedImage);
+    setPreviewImage(objectUrl);
+
+    return () => {
+      URL.revokeObjectURL(objectUrl);
+    };
+  }, [selectedImage]);
+
+  // Validate and select a profile photo from the device.
+  const handleImageSelect = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select a valid image file.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_SIZE) {
+      toast.error("Image size must be 10 MB or less.");
+      event.target.value = "";
+      return;
+    }
+
+    setSelectedImage(file);
+    toast.success("Image selected. Click Save Changes to upload it.");
+    
+    // Allow selecting the same file again later.
+    event.target.value = "";
+  };
+
+  // Remove the newly selected image and restore the saved profile photo.
+  const handleRemoveSelectedImage = () => {
+    setSelectedImage(null);
+  };
+
+  // Upload the selected image to ImgBB.
+  const uploadProfileImage = async (): Promise<string | null> => {
+    if (!selectedImage) return image || null;
+
+    if (!API_URL) {
+      toast.error("API URL is not configured.");
+      return null;
+    }
+
+    const formData = new FormData();
+    formData.append("images", selectedImage);
+
+    const response = await fetch(`${API_URL}/api/upload/images`, {
+      method: "POST",
+      credentials: "include",
+      body: formData,
+    });
+
+    const result = await response.json();
+
+    if (!response.ok || !result.success) {
+      throw new Error(result.message || "Failed to upload profile photo.");
+    }
+
+    const uploadedImageUrl = result.data?.[0];
+
+    if (!uploadedImageUrl) {
+      throw new Error("The uploaded image URL was not returned.");
+    }
+
+    return uploadedImageUrl;
+  };
+
+  // Update the user's StudioSpace profile.
   const handleUpdateProfile = async (
     event: FormEvent<HTMLFormElement>
   ) => {
@@ -105,9 +194,16 @@ export default function MyProfilePage() {
     setIsSaving(true);
 
     try {
+      let updatedImage = image || null;
+
+      if (selectedImage) {
+        toast.info("Uploading your profile photo...");
+        updatedImage = await uploadProfileImage();
+      }
+
       const result = await authClient.updateUser({
         name: name.trim(),
-        image: image.trim() || null,
+        image: updatedImage,
       });
 
       if (result.error) {
@@ -115,15 +211,23 @@ export default function MyProfilePage() {
         return;
       }
 
+      setImage(updatedImage || "");
+      setSelectedImage(null);
+
       toast.success("Profile updated successfully!");
       router.refresh();
-    } catch {
-      toast.error("Something went wrong. Please try again.");
+    } catch (error) {
+      toast.error(
+        error instanceof Error
+          ? error.message
+          : "Something went wrong. Please try again."
+      );
     } finally {
       setIsSaving(false);
     }
   };
 
+  // Change the user's email/password account password.
   const handleChangePassword = async (
     event: FormEvent<HTMLFormElement>
   ) => {
@@ -203,6 +307,8 @@ export default function MyProfilePage() {
     );
   }
 
+  const displayedImage = previewImage || image;
+
   return (
     <main className="min-h-screen bg-[#f8f5f1] px-4 py-8 sm:py-10">
       <div className="mx-auto max-w-xl">
@@ -214,9 +320,7 @@ export default function MyProfilePage() {
               <UserRound size={21} />
             </div>
 
-            <h1 className="text-xl font-semibold">
-              My Profile
-            </h1>
+            <h1 className="text-xl font-semibold">My Profile</h1>
 
             <p className="mt-1.5 text-xs leading-5 text-[#eee2d9] sm:text-sm">
               Manage your personal information and account security.
@@ -231,24 +335,79 @@ export default function MyProfilePage() {
               onSubmit={handleUpdateProfile}
               className="space-y-4"
             >
-              {/* Profile Picture */}
-              <div className="flex flex-col items-center gap-2 border-b border-[#eee7e1] pb-5">
-                {image ? (
-                  <img
-                    src={image}
-                    alt="Profile"
-                    referrerPolicy="no-referrer"
-                    className="h-16 w-16 rounded-full border-[3px] border-[#eee7e1] object-cover"
-                  />
-                ) : (
-                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#604438] text-xl font-semibold text-white">
-                    {name.charAt(0).toUpperCase() || "U"}
-                  </div>
-                )}
+              {/* Profile Picture Upload */}
+              <div className="flex flex-col items-center gap-3 border-b border-[#eee7e1] pb-5">
+                <div className="relative">
+                  {displayedImage ? (
+                    <img
+                      src={displayedImage}
+                      alt="Profile"
+                      referrerPolicy="no-referrer"
+                      className="h-20 w-20 rounded-full border-[3px] border-[#eee7e1] object-cover"
+                    />
+                  ) : (
+                    <div className="flex h-20 w-20 items-center justify-center rounded-full bg-[#604438] text-2xl font-semibold text-white">
+                      {name.charAt(0).toUpperCase() || "U"}
+                    </div>
+                  )}
 
-                <p className="text-xs text-[#76665d]">
-                  Your profile picture
-                </p>
+                  <label
+                    htmlFor="profileImage"
+                    className="absolute bottom-0 right-0 flex h-8 w-8 cursor-pointer items-center justify-center rounded-full border-2 border-white bg-[#604438] text-white shadow-sm transition hover:bg-[#493329]"
+                    title="Upload profile photo"
+                  >
+                    <Camera size={15} />
+                  </label>
+
+                  <input
+                    id="profileImage"
+                    type="file"
+                    accept="image/*"
+                    onChange={handleImageSelect}
+                    className="hidden"
+                  />
+                </div>
+
+                <div className="text-center">
+                  <p className="text-sm font-semibold text-[#49372e]">
+                    Profile Picture
+                  </p>
+
+                  <p className="mt-1 text-xs text-[#84776e]">
+                    Upload a photo from your device.
+                  </p>
+
+                  <p className="mt-1 text-xs text-[#99877b]">
+                    Maximum file size: 10 MB
+                  </p>
+                </div>
+
+                <div className="flex flex-wrap items-center justify-center gap-2">
+                  <label
+                    htmlFor="profileImage"
+                    className="inline-flex cursor-pointer items-center gap-2 rounded-md border border-[#e4d9d0] bg-[#fdfcfb] px-3.5 py-2 text-xs font-semibold text-[#604438] transition hover:bg-[#f3ece6]"
+                  >
+                    <Upload size={14} />
+                    Choose Photo
+                  </label>
+
+                  {selectedImage && (
+                    <button
+                      type="button"
+                      onClick={handleRemoveSelectedImage}
+                      className="inline-flex items-center gap-1.5 rounded-md border border-[#e4d9d0] px-3 py-2 text-xs font-semibold text-[#84776e] transition hover:bg-[#f3ece6]"
+                    >
+                      <X size={14} />
+                      Remove Selection
+                    </button>
+                  )}
+                </div>
+
+                {selectedImage && (
+                  <p className="max-w-full break-all text-center text-xs text-[#604438]">
+                    Selected: {selectedImage.name}
+                  </p>
+                )}
               </div>
 
               {/* Full Name */}
@@ -306,36 +465,6 @@ export default function MyProfilePage() {
                   Your email address cannot be changed here.
                 </p>
               </div>
-
-              {/* Profile Photo URL */}
-              <div>
-                <label
-                  htmlFor="image"
-                  className="mb-1.5 block text-sm font-semibold text-[#49372e]"
-                >
-                  Profile Photo URL
-                </label>
-
-                <div className="relative">
-                  <Camera
-                    size={17}
-                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99877b]"
-                  />
-
-                  <input
-                    id="image"
-                    type="url"
-                    value={image}
-                    onChange={(event) => setImage(event.target.value)}
-                    placeholder="https://example.com/photo.jpg"
-                    className="w-full rounded-md border border-[#e4d9d0] bg-[#fdfcfb] py-2.5 pl-10 pr-3.5 text-sm text-[#49372e] outline-none transition focus:border-[#604438] focus:ring-2 focus:ring-[#604438]/10"
-                  />
-                </div>
-
-                <p className="mt-1.5 text-xs text-[#99877b]">
-                  Paste an image URL to update your profile picture.
-                </p>
-              </div>
             </form>
 
             {/* Change Password Section */}
@@ -348,7 +477,6 @@ export default function MyProfilePage() {
               </div>
             ) : hasCredentialAccount ? (
               <section className="mt-4 border-t border-[#eee7e1] pt-4">
-
                 <button
                   type="button"
                   onClick={() =>
@@ -435,7 +563,8 @@ export default function MyProfilePage() {
                       />
 
                       <p className="mt-1.5 text-xs leading-5 text-[#99877b]">
-                        At least 6 characters, including uppercase and lowercase letters.
+                        At least 6 characters, including uppercase and
+                        lowercase letters.
                       </p>
                     </div>
 
