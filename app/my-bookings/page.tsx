@@ -388,11 +388,13 @@ export default function MyBookingsPage() {
                           View Studio
                         </Link>
 
-                        {booking.status === "Pending" && (
+                        {/* Show cancellation button for every non-cancelled booking */}
+                        {booking.status !== "Cancelled" && (
                           <button
                             type="button"
                             onClick={() => setSelectedBooking(booking)}
-                            className="inline-flex items-center gap-2 rounded-lg bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-700 transition hover:bg-red-100"
+                            disabled={cancellingId === booking._id}
+                            className="inline-flex items-center gap-2 rounded-lg bg-red-50 px-4 py-2.5 text-sm font-semibold text-red-700 transition hover:bg-red-100 disabled:cursor-not-allowed disabled:opacity-50"
                           >
                             <XCircle size={16} />
                             Cancel Booking
@@ -450,11 +452,15 @@ export default function MyBookingsPage() {
               </h2>
 
               <p className="mt-3 text-sm leading-7 text-[#786B62]">
-                Are you sure you want to cancel your reservation for{" "}
+                Are you sure you want to cancel your{" "}
+                <span className="font-semibold text-[#30251F]">
+                  {selectedBooking.status.toLowerCase()}
+                </span>{" "}
+                reservation for{" "}
                 <span className="font-semibold text-[#30251F]">
                   {selectedBooking.studioName}
                 </span>
-                ? This action cannot be undone.
+                ? The host will be notified of the cancellation.
               </p>
             </div>
 
