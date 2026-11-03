@@ -6,6 +6,7 @@ export interface Studio {
   category: string;
   location: string;
   price: number;
+  securityDeposit?: number;
   capacity: number;
   status: string;
   rating?: number;

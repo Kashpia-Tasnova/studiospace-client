@@ -28,7 +28,7 @@ export default function StudioGallery({
   }
 
   return (
-    <div className="studio-gallery relative overflow-hidden rounded-2xl bg-[#E8D9CC] sm:rounded-3xl">
+    <div className="studio-gallery relative overflow-hidden rounded-2xl sm:rounded-3xl">
       <Swiper
         modules={[Autoplay, Pagination]}
         slidesPerView={1}
@@ -50,16 +50,21 @@ export default function StudioGallery({
       >
         {galleryImages.map((image, index) => (
           <SwiperSlide key={`${image}-${index}`}>
-            <div className="relative h-[260px] w-full sm:h-[360px] lg:h-[480px]">
-              <Image
-                src={image}
-                alt={`${studioName} - Gallery image ${index + 1}`}
-                fill
-                priority={index === 0}
-                sizes="(max-width: 640px) 100vw, (max-width: 1024px) 90vw, 1200px"
-                className="object-cover"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent" />
+            <div className="relative flex h-[260px] w-full items-center justify-center sm:h-[360px] lg:h-[480px]">
+              <div className="relative h-full w-[80%] overflow-hidden rounded-xl bg-[#E8D9CC] sm:rounded-2xl">
+                <Image
+                  src={image}
+                  alt={`${studioName} - Gallery image ${index + 1}`}
+                  fill
+                  priority={index === 0}
+                  quality={100}
+                  sizes="(max-width: 640px) 80vw, (max-width: 1024px) 72vw, 960px"
+                  className="object-contain p-2 sm:p-3"
+                  unoptimized
+                />
+              </div>
+
+              <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent pointer-events-none" />
             </div>
           </SwiperSlide>
         ))}
@@ -72,7 +77,7 @@ export default function StudioGallery({
       <style jsx global>{`
         .studio-gallery .swiper-pagination {
           bottom: 18px !important;
-          left: 20px !important;
+          left: 12% !important;
           width: auto !important;
           text-align: left !important;
         }
@@ -81,14 +86,14 @@ export default function StudioGallery({
           width: 8px;
           height: 8px;
           margin: 0 4px !important;
-          background: white;
+          background: #795548;
           opacity: 0.65;
         }
 
         .studio-gallery .swiper-pagination-bullet-active {
           width: 22px;
           border-radius: 10px;
-          background: white;
+          background: #795548;
           opacity: 1;
         }
       `}</style>
