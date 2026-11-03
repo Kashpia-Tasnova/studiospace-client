@@ -181,7 +181,7 @@ export default function Navbar() {
           onClick={handleHomeClick}
         >
           <Image
-            src="/logo.png"
+            src="/Logo.png"
             alt="StudioSpace Logo"
             width={190}
             height={80}
