@@ -1,24 +1,78 @@
 
 "use client";
 
-import { useState, type FormEvent } from "react";
+import { useEffect, useState, type FormEvent, type ChangeEvent } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { Eye, EyeOff, Loader2, Aperture, Sparkles } from "lucide-react";
+import {
+  Eye,
+  EyeOff,
+  Loader2,
+  Aperture,
+  Sparkles,
+  Camera,
+  X,
+  UserRound,
+} from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
+
+const API_URL = process.env.NEXT_PUBLIC_API_URL;
+const MAX_IMAGE_SIZE = 10 * 1024 * 1024;
 
 export default function RegisterPage() {
   const router = useRouter();
 
   const [name, setName] = useState("");
   const [email, setEmail] = useState("");
-  const [photoURL, setPhotoURL] = useState("");
   const [password, setPassword] = useState("");
+
+  const [selectedImage, setSelectedImage] = useState<File | null>(null);
+  const [previewImage, setPreviewImage] = useState("");
+
   const [passwordError, setPasswordError] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+
+  // Create and clean up the selected image preview
+  useEffect(() => {
+    if (!selectedImage) {
+      setPreviewImage("");
+      return;
+    }
+
+    const imageUrl = URL.createObjectURL(selectedImage);
+    setPreviewImage(imageUrl);
+
+    return () => {
+      URL.revokeObjectURL(imageUrl);
+    };
+  }, [selectedImage]);
+
+  const handleImageChange = (event: ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+
+    if (!file) return;
+
+    if (!file.type.startsWith("image/")) {
+      toast.error("Please select a valid image.");
+      event.target.value = "";
+      return;
+    }
+
+    if (file.size > MAX_IMAGE_SIZE) {
+      toast.error("Image size must be 10MB or less.");
+      event.target.value = "";
+      return;
+    }
+
+    setSelectedImage(file);
+  };
+
+  const removeImage = () => {
+    setSelectedImage(null);
+  };
 
   const validatePassword = (value: string) => {
     if (value.length < 6) {
@@ -39,8 +93,8 @@ export default function RegisterPage() {
   const handleRegister = async (event: FormEvent<HTMLFormElement>) => {
     event.preventDefault();
 
-    if (!name.trim() || !email.trim() || !photoURL.trim() || !password) {
-      toast.error("Please fill in all fields.");
+    if (!name.trim() || !email.trim() || !password) {
+      toast.error("Please fill in all required fields.");
       return;
     }
 
@@ -57,12 +111,12 @@ export default function RegisterPage() {
     try {
       setLoading(true);
 
+      // Step 1: Create the account
       const { error } = await authClient.signUp.email({
         name: name.trim(),
         email: email.trim(),
         password,
-        image: photoURL.trim(),
-        callbackURL: "http://localhost:3000/login",
+        callbackURL: `${window.location.origin}/login`,
       });
 
       if (error) {
@@ -70,9 +124,69 @@ export default function RegisterPage() {
         return;
       }
 
+      // Step 2: Upload the selected image after account creation
+      if (selectedImage) {
+        try {
+          if (!API_URL) {
+            throw new Error("Backend URL is not configured.");
+          }
+
+          const formData = new FormData();
+          formData.append("images", selectedImage);
+
+          const uploadResponse = await fetch(
+            `${API_URL}/api/upload/images`,
+            {
+              method: "POST",
+              body: formData,
+              credentials: "include",
+            }
+          );
+
+          const uploadResult = await uploadResponse.json();
+
+          if (!uploadResponse.ok || !uploadResult.success) {
+            throw new Error(
+              uploadResult.message || "Profile photo upload failed."
+            );
+          }
+
+          const uploadedImageUrl = uploadResult.data?.[0];
+
+          if (!uploadedImageUrl) {
+            throw new Error("Uploaded image URL was not returned.");
+          }
+
+          // Step 3: Save uploaded image to the user profile
+          const { error: updateError } = await authClient.updateUser({
+            image: uploadedImageUrl,
+          });
+
+          if (updateError) {
+            throw new Error(
+              updateError.message || "Unable to update profile photo."
+            );
+          }
+        } catch (imageError) {
+          console.error("Registration photo upload error:", imageError);
+
+          toast.warning(
+            "Account created, but the profile photo could not be uploaded. You can upload it later from My Profile."
+          );
+        }
+      }
+
+      // Step 4: Sign out and redirect to login
+      try {
+        await authClient.signOut();
+      } catch (signOutError) {
+        console.error("Registration sign-out error:", signOutError);
+      }
+
       toast.success("Account created successfully!");
       router.push("/login");
-    } catch {
+    } catch (error) {
+      console.error("Registration error:", error);
       toast.error("Something went wrong. Please try again.");
     } finally {
       setLoading(false);
@@ -85,8 +199,8 @@ export default function RegisterPage() {
 
       const { error } = await authClient.signIn.social({
         provider: "google",
-        callbackURL: "http://localhost:3000/",
-        errorCallbackURL: "http://localhost:3000/register",
+        callbackURL: `${window.location.origin}/`,
+        errorCallbackURL: `${window.location.origin}/register`,
       });
 
       if (error) {
@@ -215,30 +329,6 @@ export default function RegisterPage() {
                 </div>
               </div>
 
-              {/* Profile Photo */}
-              <div>
-                <label
-                  htmlFor="photoURL"
-                  className="mb-1.5 block text-xs font-semibold text-[#40352F] sm:text-sm"
-                >
-                  Profile Photo URL
-                </label>
-
-                <input
-                  id="photoURL"
-                  type="url"
-                  value={photoURL}
-                  onChange={(event) => setPhotoURL(event.target.value)}
-                  placeholder="https://example.com/photo.jpg"
-                  required
-                  className="w-full rounded-lg border border-[#E5D8CD] bg-[#FFFEFC] px-3.5 py-2.5 text-xs text-[#29231F] outline-none transition placeholder:text-[#A69A91] focus:border-[#795548] focus:ring-2 focus:ring-[#795548]/10 sm:text-sm"
-                />
-
-                <p className="mt-1 text-[11px] text-[#95877D]">
-                  Enter a publicly accessible image URL.
-                </p>
-              </div>
-
               {/* Password */}
               <div>
                 <label
@@ -292,6 +382,74 @@ export default function RegisterPage() {
                 )}
               </div>
 
+              {/* Profile Photo Upload - After Password */}
+              <div>
+                <label className="mb-1.5 block text-xs font-semibold text-[#40352F] sm:text-sm">
+                  Profile Photo{" "}
+                  <span className="font-normal text-[#95877D]">
+                    (Optional)
+                  </span>
+                </label>
+
+                <div className="flex flex-wrap items-center gap-4 rounded-lg border border-dashed border-[#DCCABD] bg-[#FFFEFC] p-3.5">
+                  <div className="flex h-16 w-16 shrink-0 items-center justify-center overflow-hidden rounded-full border border-[#E5D8CD] bg-[#F8F5F0]">
+                    {previewImage ? (
+                      <img
+                        src={previewImage}
+                        alt="Selected profile preview"
+                        className="h-full w-full object-cover"
+                      />
+                    ) : (
+                      <UserRound
+                        size={29}
+                        className="text-[#A67C63]"
+                      />
+                    )}
+                  </div>
+
+                  <div className="min-w-0 flex-1">
+                    <p className="text-xs font-medium text-[#40352F]">
+                      {selectedImage
+                        ? selectedImage.name
+                        : "Choose a profile photo"}
+                    </p>
+
+                    <p className="mt-1 text-[11px] text-[#95877D]">
+                      JPG, PNG or other image formats · Maximum 10MB
+                    </p>
+
+                    <div className="mt-2.5 flex flex-wrap items-center gap-2">
+                      <label
+                        htmlFor="profilePhoto"
+                        className="inline-flex cursor-pointer items-center gap-1.5 rounded-lg bg-[#795548] px-3 py-2 text-xs font-semibold !text-white transition hover:bg-[#604438]"
+                      >
+                        <Camera size={14} />
+                        {selectedImage ? "Change Photo" : "Upload Photo"}
+                      </label>
+
+                      {selectedImage && (
+                        <button
+                          type="button"
+                          onClick={removeImage}
+                          className="inline-flex items-center gap-1 rounded-lg border border-[#E5D8CD] px-3 py-2 text-xs font-semibold text-[#795548] transition hover:bg-[#F8F5F0]"
+                        >
+                          <X size={14} />
+                          Remove
+                        </button>
+                      )}
+                    </div>
+
+                    <input
+                      id="profilePhoto"
+                      type="file"
+                      accept="image/*"
+                      onChange={handleImageChange}
+                      className="hidden"
+                    />
+                  </div>
+                </div>
+              </div>
+
               {/* Register Button */}
               <button
                 type="submit"
@@ -324,7 +482,11 @@ export default function RegisterPage() {
               {googleLoading ? (
                 <Loader2 size={16} className="animate-spin" />
               ) : (
-                <svg viewBox="0 0 48 48" className="h-[18px] w-[18px]" aria-hidden="true">
+                <svg
+                  viewBox="0 0 48 48"
+                  className="h-[18px] w-[18px]"
+                  aria-hidden="true"
+                >
                   <path
                     fill="#EA4335"
                     d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"
@@ -345,7 +507,9 @@ export default function RegisterPage() {
                 </svg>
               )}
 
-              {googleLoading ? "Connecting to Google..." : "Continue with Google"}
+              {googleLoading
+                ? "Connecting to Google..."
+                : "Continue with Google"}
             </button>
 
             {/* Login Link */}
