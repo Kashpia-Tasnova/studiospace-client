@@ -102,33 +102,33 @@ export default function LoginPage() {
   };
 
   return (
-    <main className="min-h-[85vh] bg-[#F8F5F0] px-4 py-10 sm:px-6 lg:py-14">
-      <div className="mx-auto grid w-full max-w-5xl overflow-hidden rounded-2xl bg-white shadow-xl lg:grid-cols-[0.8fr_1.2fr]">
+    <main className="min-h-[85vh] bg-[#F8F5F0] px-4 py-7 sm:px-6 lg:py-8">
+      <div className="mx-auto grid w-full max-w-[850px] overflow-hidden rounded-xl bg-white shadow-lg lg:grid-cols-[0.8fr_1.2fr]">
 
         {/* Left Introduction Panel */}
-        <section className="relative flex flex-col justify-between overflow-hidden bg-[#604438] p-7 text-white sm:p-10 lg:p-12">
+        <section className="relative flex flex-col justify-between overflow-hidden bg-[#604438] p-5 text-white sm:p-7 lg:p-8">
           <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full border border-white/10" />
           <div className="absolute -bottom-24 -left-20 h-72 w-72 rounded-full border border-white/10" />
           <div className="absolute -bottom-16 -left-12 h-56 w-56 rounded-full border border-white/10" />
 
           <div className="relative z-10">
-            <Link href="/" className="inline-flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15">
-                <Aperture size={25} />
+            <Link href="/" className="inline-flex items-center gap-2.5">
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/15">
+                <Aperture size={21} />
               </span>
 
-              <span className="text-xl font-bold tracking-tight">
+              <span className="text-base font-bold tracking-tight">
                 StudioSpace
               </span>
             </Link>
 
-            <div className="mt-12 lg:mt-20">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-[#F1DFCF]">
-                <Sparkles size={14} />
+            <div className="mt-9 lg:mt-12">
+              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-medium text-[#F1DFCF]">
+                <Sparkles size={12} />
                 YOUR CREATIVE JOURNEY STARTS HERE
               </span>
 
-              <h1 className="mt-6 text-3xl font-bold leading-tight sm:text-4xl">
+              <h1 className="mt-4 text-2xl font-bold leading-tight sm:text-[28px]">
                 Make Space for
                 <br />
                 Your Creativity.
@@ -136,14 +136,14 @@ export default function LoginPage() {
             </div>
           </div>
 
-          <div className="relative z-10 mt-12">
-            <p className="max-w-sm text-sm leading-7 text-[#E8DDD4] sm:text-base">
+          <div className="relative z-10 mt-8">
+            <p className="max-w-sm text-xs leading-6 text-[#E8DDD4] sm:text-sm">
               Sign in to discover inspiring studios, manage your bookings, and
               bring your creative ideas to life.
             </p>
 
-            <div className="mt-10 border-t border-white/20 pt-6">
-              <p className="text-sm text-[#E8DDD4]">
+            <div className="mt-6 border-t border-white/20 pt-4">
+              <p className="text-xs text-[#E8DDD4]">
                 Find your space. Create your story.
               </p>
             </div>
@@ -151,38 +151,38 @@ export default function LoginPage() {
         </section>
 
         {/* Right Login Form */}
-        <section className="flex flex-col justify-center px-6 py-10 sm:px-10 lg:px-14">
-          <div className="mx-auto w-full max-w-md">
+        <section className="flex flex-col justify-center px-5 py-7 sm:px-7 sm:py-8 lg:px-8">
+          <div className="mx-auto w-full max-w-sm">
 
             {/* Login Heading */}
-            <div className="mb-8">
-              <p className="mb-2 text-sm font-semibold uppercase tracking-[0.2em] text-[#9A7865]">
+            <div className="mb-5">
+              <p className="mb-1.5 text-[11px] font-semibold uppercase tracking-[0.18em] text-[#9A7865]">
                 Welcome back
               </p>
 
-              <h2 className="text-3xl font-bold text-[#352820]">
+              <h2 className="text-2xl font-bold text-[#352820]">
                 Log In
               </h2>
 
-              <p className="mt-2 text-sm text-[#82766F]">
+              <p className="mt-1.5 text-xs text-[#82766F] sm:text-sm">
                 Enter your details to access your account.
               </p>
             </div>
 
             {/* Login Form */}
-            <form onSubmit={handleLogin} className="space-y-5">
+            <form onSubmit={handleLogin} className="space-y-4">
 
               {/* Email Field */}
               <div>
                 <label
                   htmlFor="email"
-                  className="mb-2 block text-sm font-medium text-[#49382E]"
+                  className="mb-1.5 block text-xs font-medium text-[#49382E] sm:text-sm"
                 >
                   Email Address
                 </label>
 
                 <div className="relative">
-                  <Mail className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#9A887C]" />
+                  <Mail className="absolute left-3.5 top-1/2 h-[17px] w-[17px] -translate-y-1/2 text-[#9A887C]" />
 
                   <input
                     id="email"
@@ -194,7 +194,7 @@ export default function LoginPage() {
                     }}
                     placeholder="Enter your email"
                     autoComplete="email"
-                    className="w-full rounded-lg border border-[#E5DCD5] bg-[#FCFAF8] py-3.5 pl-12 pr-4 text-sm text-[#352820] outline-none transition placeholder:text-[#B2A69E] focus:border-[#8B6B58] focus:ring-2 focus:ring-[#8B6B58]/15"
+                    className="w-full rounded-md border border-[#E5DCD5] bg-[#FCFAF8] py-2 pl-10 pr-3.5 text-xs text-[#352820] outline-none transition placeholder:text-[#B2A69E] focus:border-[#8B6B58] focus:ring-2 focus:ring-[#8B6B58]/15 sm:text-sm"
                   />
                 </div>
 
@@ -209,13 +209,13 @@ export default function LoginPage() {
               <div>
                 <label
                   htmlFor="password"
-                  className="mb-2 block text-sm font-medium text-[#49382E]"
+                  className="mb-1.5 block text-xs font-medium text-[#49382E] sm:text-sm"
                 >
                   Password
                 </label>
 
                 <div className="relative">
-                  <Lock className="absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-[#9A887C]" />
+                  <Lock className="absolute left-3.5 top-1/2 h-[17px] w-[17px] -translate-y-1/2 text-[#9A887C]" />
 
                   <input
                     id="password"
@@ -227,21 +227,21 @@ export default function LoginPage() {
                     }}
                     placeholder="Enter your password"
                     autoComplete="current-password"
-                    className="w-full rounded-lg border border-[#E5DCD5] bg-[#FCFAF8] py-3.5 pl-12 pr-12 text-sm text-[#352820] outline-none transition placeholder:text-[#B2A69E] focus:border-[#8B6B58] focus:ring-2 focus:ring-[#8B6B58]/15 [&::-ms-reveal]:hidden"
+                    className="w-full rounded-md border border-[#E5DCD5] bg-[#FCFAF8] py-2 pl-10 pr-11 text-xs text-[#352820] outline-none transition placeholder:text-[#B2A69E] focus:border-[#8B6B58] focus:ring-2 focus:ring-[#8B6B58]/15 [&::-ms-reveal]:hidden sm:text-sm"
                   />
 
                   <button
                     type="button"
                     onClick={() => setShowPassword(!showPassword)}
-                    className="absolute right-4 top-1/2 -translate-y-1/2 text-[#9A887C] transition hover:text-[#6B5143]"
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#9A887C] transition hover:text-[#6B5143]"
                     aria-label={
                       showPassword ? "Hide password" : "Show password"
                     }
                   >
                     {showPassword ? (
-                      <EyeOff className="h-5 w-5" />
+                      <EyeOff className="h-[17px] w-[17px]" />
                     ) : (
-                      <Eye className="h-5 w-5" />
+                      <Eye className="h-[17px] w-[17px]" />
                     )}
                   </button>
                 </div>
@@ -258,7 +258,7 @@ export default function LoginPage() {
                 <button
                   type="button"
                   onClick={handleForgotPassword}
-                  className="text-sm font-medium text-[#8B6B58] transition hover:text-[#604438] hover:underline"
+                  className="text-xs font-medium text-[#8B6B58] transition hover:text-[#604438] hover:underline"
                 >
                   Forgot Password?
                 </button>
@@ -268,11 +268,11 @@ export default function LoginPage() {
               <button
                 type="submit"
                 disabled={isLoading || isGoogleLoading}
-                className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#6B5143] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#523C31] disabled:cursor-not-allowed disabled:opacity-60"
+                className="flex w-full items-center justify-center gap-2 rounded-md bg-[#6B5143] px-5 py-2 text-xs font-semibold text-white transition hover:bg-[#523C31] disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
               >
                 {isLoading ? (
                   <>
-                    <Loader2 className="h-5 w-5 animate-spin" />
+                    <Loader2 className="h-4 w-4 animate-spin" />
                     Logging in...
                   </>
                 ) : (
@@ -282,10 +282,10 @@ export default function LoginPage() {
             </form>
 
             {/* Divider */}
-            <div className="my-6 flex items-center gap-4">
+            <div className="my-4 flex items-center gap-3">
               <div className="h-px flex-1 bg-[#E8E0DA]" />
 
-              <span className="text-xs font-medium text-[#A09289]">
+              <span className="text-[10px] font-medium text-[#A09289]">
                 OR CONTINUE WITH
               </span>
 
@@ -297,14 +297,14 @@ export default function LoginPage() {
               type="button"
               onClick={handleGoogleLogin}
               disabled={isLoading || isGoogleLoading}
-              className="flex w-full items-center justify-center gap-3 rounded-lg border border-[#E5DCD5] bg-white px-5 py-3.5 text-sm font-semibold text-[#49382E] transition hover:bg-[#FAF7F4] disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2.5 rounded-md border border-[#E5DCD5] bg-white px-4 py-2 text-xs font-semibold text-[#49382E] transition hover:bg-[#FAF7F4] disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
             >
               {isGoogleLoading ? (
-                <Loader2 className="h-5 w-5 animate-spin" />
+                <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
                 <svg
                   viewBox="0 0 48 48"
-                  className="h-5 w-5"
+                  className="h-[18px] w-[18px]"
                   aria-hidden="true"
                 >
                   <path
@@ -336,7 +336,7 @@ export default function LoginPage() {
             </button>
 
             {/* Register Link */}
-            <p className="mt-8 text-center text-sm text-[#82766F]">
+            <p className="mt-5 text-center text-xs text-[#82766F] sm:text-sm">
               Don't have an account?{" "}
               <Link
                 href="/register"

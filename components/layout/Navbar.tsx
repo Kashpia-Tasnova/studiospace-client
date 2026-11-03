@@ -195,11 +195,7 @@ export default function Navbar() {
             <Link
               key={link.href}
               href={link.href}
-              onClick={
-                link.href === "/"
-                  ? handleHomeClick
-                  : undefined
-              }
+              onClick={link.href === "/" ? handleHomeClick : undefined}
               className={`navbar-link ${
                 isActive(link.href) ? "active" : ""
               }`}
@@ -230,13 +226,14 @@ export default function Navbar() {
               onMouseEnter={() => setIsProfileHovered(true)}
               onMouseLeave={() => setIsProfileHovered(false)}
             >
+              {/* Compact Avatar Button */}
               <button
                 type="button"
                 onClick={() => setProfileMenuOpen((previous) => !previous)}
-                className={`flex items-center rounded-full border border-[#E5D8CD] bg-white py-1.5 transition-all duration-300 hover:bg-[#F8F5F0] ${
+                className={`flex items-center rounded-full border border-[#E5D8CD] bg-white py-1 transition-all duration-300 hover:bg-[#F8F5F0] ${
                   isProfileHovered || profileMenuOpen
-                    ? "gap-2 pl-1.5 pr-3"
-                    : "justify-center px-1.5"
+                    ? "gap-1.5 pl-1 pr-2.5"
+                    : "justify-center px-1"
                 }`}
                 aria-expanded={profileMenuOpen}
                 aria-label="Open profile menu"
@@ -244,19 +241,24 @@ export default function Navbar() {
                 {avatar ? (
                   <img
                     src={avatar}
-                    alt={user.name || "User"}
-                    className="h-[42px] w-[42px] shrink-0 rounded-full border border-[#E5D8CD] object-cover"
+                    alt={user.name || "Google Profile"}
+                    referrerPolicy="no-referrer"
+                    onError={(event) => {
+                      console.error("Google avatar failed to load:", avatar);
+                      event.currentTarget.style.display = "none";
+                    }}
+                    className="block h-9 w-9 shrink-0 rounded-full border border-[#E5D8CD] object-cover"
                   />
                 ) : (
-                  <span className="flex h-[42px] w-[42px] shrink-0 items-center justify-center rounded-full bg-[#795548] text-base font-semibold text-white">
+                  <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#795548] text-sm font-semibold text-white">
                     {userInitial}
                   </span>
                 )}
 
                 <span
-                  className={`overflow-hidden whitespace-nowrap text-sm font-semibold text-[#49382E] transition-all duration-300 ${
+                  className={`overflow-hidden whitespace-nowrap text-xs font-semibold text-[#49382E] transition-all duration-300 ${
                     isProfileHovered || profileMenuOpen
-                      ? "max-w-36 opacity-100"
+                      ? "max-w-32 opacity-100"
                       : "max-w-0 opacity-0"
                   }`}
                 >
@@ -264,7 +266,7 @@ export default function Navbar() {
                 </span>
 
                 <ChevronDown
-                  size={20}
+                  size={17}
                   className={`shrink-0 overflow-hidden text-[#604438] transition-all duration-300 ${
                     isProfileHovered || profileMenuOpen
                       ? "max-w-5 opacity-100"
@@ -273,67 +275,68 @@ export default function Navbar() {
                 />
               </button>
 
+              {/* Compact Desktop Dropdown */}
               {profileMenuOpen && (
-                <div className="absolute right-0 top-full z-50 mt-3 w-64 overflow-hidden rounded-xl border border-[#E8D9CC] bg-white py-2 shadow-xl">
-                  <div className="border-b border-[#EFE7E0] px-4 py-3">
-                    <p className="truncate text-sm font-semibold text-[#352820]">
+                <div className="absolute right-0 top-full z-50 mt-2.5 w-56 overflow-hidden rounded-lg border border-[#E8D9CC] bg-white py-1.5 shadow-lg">
+                  <div className="border-b border-[#EFE7E0] px-3.5 py-2.5">
+                    <p className="truncate text-xs font-semibold text-[#352820]">
                       {user.name}
                     </p>
-                    <p className="truncate text-xs text-[#82766F]">
+                    <p className="mt-0.5 truncate text-[11px] text-[#82766F]">
                       {user.email}
                     </p>
                   </div>
 
-                  <div className="py-2">
+                  <div className="py-1">
                     <Link
                       href="/my-profile"
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#49382E] transition hover:bg-[#F8F5F0]"
+                      className="flex items-center gap-2.5 px-3.5 py-2 text-xs text-[#49382E] transition hover:bg-[#F8F5F0]"
                     >
-                      <UserRound size={18} />
+                      <UserRound size={16} />
                       My Profile
                     </Link>
 
                     <Link
                       href="/dashboard"
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#49382E] transition hover:bg-[#F8F5F0]"
+                      className="flex items-center gap-2.5 px-3.5 py-2 text-xs text-[#49382E] transition hover:bg-[#F8F5F0]"
                     >
-                      <LayoutDashboard size={18} />
+                      <LayoutDashboard size={16} />
                       Dashboard
                     </Link>
 
                     <Link
                       href="/add-studio"
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#49382E] transition hover:bg-[#F8F5F0]"
+                      className="flex items-center gap-2.5 px-3.5 py-2 text-xs text-[#49382E] transition hover:bg-[#F8F5F0]"
                     >
-                      <PlusCircle size={18} />
+                      <PlusCircle size={16} />
                       Add New Studio
                     </Link>
 
                     <Link
                       href="/my-listings"
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#49382E] transition hover:bg-[#F8F5F0]"
+                      className="flex items-center gap-2.5 px-3.5 py-2 text-xs text-[#49382E] transition hover:bg-[#F8F5F0]"
                     >
-                      <Building2 size={18} />
+                      <Building2 size={16} />
                       My Studio Listings
                     </Link>
 
                     <Link
                       href="/my-bookings"
-                      className="flex items-center gap-3 px-4 py-2.5 text-sm text-[#49382E] transition hover:bg-[#F8F5F0]"
+                      className="flex items-center gap-2.5 px-3.5 py-2 text-xs text-[#49382E] transition hover:bg-[#F8F5F0]"
                     >
-                      <CalendarDays size={18} />
+                      <CalendarDays size={16} />
                       My Bookings
                     </Link>
                   </div>
 
-                  <div className="border-t border-[#EFE7E0] pt-2">
+                  <div className="border-t border-[#EFE7E0] pt-1">
                     <button
                       type="button"
                       onClick={handleLogout}
                       disabled={isLoggingOut}
-                      className="flex w-full items-center gap-3 px-4 py-2.5 text-sm text-red-600 transition hover:bg-red-50 disabled:opacity-60"
+                      className="flex w-full items-center gap-2.5 px-3.5 py-2 text-xs text-red-600 transition hover:bg-red-50 disabled:opacity-60"
                     >
-                      <LogOut size={18} />
+                      <LogOut size={16} />
                       {isLoggingOut ? "Logging out..." : "Logout"}
                     </button>
                   </div>
@@ -399,25 +402,30 @@ export default function Navbar() {
           )}
 
           {!isPending && user && (
-            <div className="mt-3 border-t border-[#E8D9CC] pt-4">
-              <div className="mb-3 flex items-center gap-3 px-2">
+            <div className="mt-2.5 border-t border-[#E8D9CC] pt-3">
+              <div className="mb-2.5 flex items-center gap-2.5 px-2">
                 {avatar ? (
                   <img
                     src={avatar}
-                    alt={user.name || "User"}
-                    className="h-[42px] w-[42px] rounded-full border border-[#E5D8CD] object-cover"
+                    alt={user.name || "Google Profile"}
+                    referrerPolicy="no-referrer"
+                    onError={(event) => {
+                      console.error("Google avatar failed to load:", avatar);
+                      event.currentTarget.style.display = "none";
+                    }}
+                    className="block h-9 w-9 shrink-0 rounded-full border border-[#E5D8CD] object-cover"
                   />
                 ) : (
-                  <span className="flex h-[42px] w-[42px] items-center justify-center rounded-full bg-[#795548] text-base font-semibold text-white">
+                  <span className="flex h-9 w-9 items-center justify-center rounded-full bg-[#795548] text-sm font-semibold text-white">
                     {userInitial}
                   </span>
                 )}
 
                 <div className="min-w-0">
-                  <p className="truncate text-sm font-semibold text-[#352820]">
+                  <p className="truncate text-xs font-semibold text-[#352820]">
                     {user.name}
                   </p>
-                  <p className="truncate text-xs text-[#82766F]">
+                  <p className="truncate text-[11px] text-[#82766F]">
                     {user.email}
                   </p>
                 </div>
@@ -425,46 +433,46 @@ export default function Navbar() {
 
               <Link
                 href="/my-profile"
-                className="navbar-mobile-link flex items-center gap-3"
+                className="navbar-mobile-link flex items-center gap-2.5"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <UserRound size={18} />
+                <UserRound size={16} />
                 My Profile
               </Link>
 
               <Link
                 href="/dashboard"
-                className="navbar-mobile-link flex items-center gap-3"
+                className="navbar-mobile-link flex items-center gap-2.5"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <LayoutDashboard size={18} />
+                <LayoutDashboard size={16} />
                 Dashboard
               </Link>
 
               <Link
                 href="/add-studio"
-                className="navbar-mobile-link flex items-center gap-3"
+                className="navbar-mobile-link flex items-center gap-2.5"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <PlusCircle size={18} />
+                <PlusCircle size={16} />
                 Add New Studio
               </Link>
 
               <Link
                 href="/my-listings"
-                className="navbar-mobile-link flex items-center gap-3"
+                className="navbar-mobile-link flex items-center gap-2.5"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <Building2 size={18} />
+                <Building2 size={16} />
                 My Studio Listings
               </Link>
 
               <Link
                 href="/my-bookings"
-                className="navbar-mobile-link flex items-center gap-3"
+                className="navbar-mobile-link flex items-center gap-2.5"
                 onClick={() => setMobileMenuOpen(false)}
               >
-                <CalendarDays size={18} />
+                <CalendarDays size={16} />
                 My Bookings
               </Link>
 
@@ -472,9 +480,9 @@ export default function Navbar() {
                 type="button"
                 onClick={handleLogout}
                 disabled={isLoggingOut}
-                className="mt-2 flex w-full items-center gap-3 rounded-lg px-3 py-3 text-left text-sm font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-60"
+                className="mt-1.5 flex w-full items-center gap-2.5 rounded-lg px-3 py-2 text-left text-xs font-medium text-red-600 transition hover:bg-red-50 disabled:opacity-60"
               >
-                <LogOut size={18} />
+                <LogOut size={16} />
                 {isLoggingOut ? "Logging out..." : "Logout"}
               </button>
             </div>

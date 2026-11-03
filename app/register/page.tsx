@@ -100,38 +100,39 @@ export default function RegisterPage() {
   };
 
   return (
-    <main className="min-h-[85vh] bg-[#F8F5F0] px-4 py-10 sm:px-6 lg:py-14">
-      <div className="mx-auto grid w-full max-w-6xl overflow-hidden rounded-3xl border border-[#E8D9CC] bg-white shadow-[0_15px_50px_rgba(78,52,46,0.08)] lg:grid-cols-[0.75fr_1.25fr]">
+    <main className="min-h-[85vh] bg-[#F8F5F0] px-4 py-7 sm:px-6 lg:py-8">
+      <div className="mx-auto grid w-full max-w-[850px] overflow-hidden rounded-xl border border-[#E8D9CC] bg-white shadow-[0_12px_40px_rgba(78,52,46,0.08)] lg:grid-cols-[0.8fr_1.2fr]">
 
         {/* Left Introduction Panel */}
-        <section className="relative flex flex-col justify-between overflow-hidden bg-[#604438] p-7 text-white sm:p-10 lg:p-12">
-          <div className="absolute -right-20 -top-20 h-64 w-64 rounded-full border border-white/10" />
-          <div className="absolute -bottom-24 -left-20 h-72 w-72 rounded-full border border-white/10" />
-          <div className="absolute -bottom-16 -left-12 h-56 w-56 rounded-full border border-white/10" />
+        <section className="relative flex flex-col justify-between overflow-hidden bg-[#604438] p-5 text-white sm:p-7 lg:p-8">
+          <div className="absolute -right-20 -top-20 h-56 w-56 rounded-full border border-white/10" />
+          <div className="absolute -bottom-24 -left-20 h-64 w-64 rounded-full border border-white/10" />
+          <div className="absolute -bottom-16 -left-12 h-48 w-48 rounded-full border border-white/10" />
 
           <div className="relative z-10">
-            <Link href="/" className="inline-flex items-center gap-3">
-              <span className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/15">
-                <Aperture size={25} />
+            <Link href="/" className="inline-flex items-center gap-2.5">
+              <span className="flex h-9 w-9 items-center justify-center rounded-lg bg-white/15">
+                <Aperture size={21} />
               </span>
-              <span className="text-xl font-bold tracking-tight">
+
+              <span className="text-base font-bold tracking-tight">
                 StudioSpace
               </span>
             </Link>
 
-            <div className="mt-12 lg:mt-20">
-              <span className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-3 py-1.5 text-xs font-medium text-[#F1DFCF]">
-                <Sparkles size={14} />
+            <div className="mt-9 lg:mt-12">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2.5 py-1 text-[10px] font-medium text-[#F1DFCF]">
+                <Sparkles size={12} />
                 YOUR CREATIVE JOURNEY STARTS HERE
               </span>
 
-              <h1 className="mt-6 text-3xl font-bold leading-tight sm:text-4xl">
+              <h1 className="mt-4 text-2xl font-bold leading-tight sm:text-[28px]">
                 Make Space for
                 <br />
                 Your Creativity.
               </h1>
 
-              <p className="mt-5 max-w-sm text-sm leading-7 text-white/75">
+              <p className="mt-4 max-w-sm text-xs leading-6 text-white/75 sm:text-sm">
                 Discover inspiring studios, connect with creative
                 professionals, and find the perfect space to bring your next
                 idea to life.
@@ -139,216 +140,225 @@ export default function RegisterPage() {
             </div>
           </div>
 
-          <div className="relative z-10 mt-10 border-t border-white/15 pt-6">
-            <p className="text-sm font-medium text-[#F1DFCF]">
+          <div className="relative z-10 mt-8 border-t border-white/15 pt-4">
+            <p className="text-xs font-medium text-[#F1DFCF] sm:text-sm">
               Find your space. Create your story.
             </p>
-            <p className="mt-2 text-xs text-white/55">
+
+            <p className="mt-1.5 text-[11px] text-white/55">
               Join the StudioSpace creative community.
             </p>
           </div>
         </section>
 
         {/* Right Registration Form */}
-        <section className="min-w-0 p-6 sm:p-9 lg:p-12">
-          <div className="mb-7">
-            <span className="text-xs font-semibold uppercase tracking-[0.18em] text-[#96715D]">
-              Join StudioSpace
-            </span>
+        <section className="min-w-0 px-5 py-7 sm:px-7 sm:py-8 lg:px-8">
+          <div className="mx-auto w-full max-w-md">
 
-            <h2 className="mt-2 text-2xl font-bold text-[#29231F] sm:text-3xl">
-              Create Your Account
-            </h2>
+            {/* Registration Heading */}
+            <div className="mb-5">
+              <span className="text-[11px] font-semibold uppercase tracking-[0.18em] text-[#96715D]">
+                Join StudioSpace
+              </span>
 
-            <p className="mt-2 text-sm leading-6 text-[#796E66]">
-              Fill in your details to get started.
-            </p>
-          </div>
+              <h2 className="mt-1.5 text-2xl font-bold text-[#29231F]">
+                Create Your Account
+              </h2>
 
-          <form onSubmit={handleRegister} className="space-y-5">
-            {/* Name and Email */}
-            <div className="grid grid-cols-1 gap-5 md:grid-cols-2">
-              <div className="min-w-0">
-                <label
-                  htmlFor="name"
-                  className="mb-2 block text-sm font-semibold text-[#40352F]"
-                >
-                  Full Name
-                </label>
-
-                <input
-                  id="name"
-                  type="text"
-                  value={name}
-                  onChange={(event) => setName(event.target.value)}
-                  placeholder="Enter your name"
-                  autoComplete="name"
-                  required
-                  className="w-full min-w-0 rounded-xl border border-[#E5D8CD] bg-[#FFFEFC] px-4 py-3.5 text-sm text-[#29231F] outline-none transition placeholder:text-[#A69A91] focus:border-[#795548] focus:ring-2 focus:ring-[#795548]/10"
-                />
-              </div>
-
-              <div className="min-w-0">
-                <label
-                  htmlFor="email"
-                  className="mb-2 block text-sm font-semibold text-[#40352F]"
-                >
-                  Email Address
-                </label>
-
-                <input
-                  id="email"
-                  type="email"
-                  value={email}
-                  onChange={(event) => setEmail(event.target.value)}
-                  placeholder="you@example.com"
-                  autoComplete="email"
-                  required
-                  className="w-full min-w-0 rounded-xl border border-[#E5D8CD] bg-[#FFFEFC] px-4 py-3.5 text-sm text-[#29231F] outline-none transition placeholder:text-[#A69A91] focus:border-[#795548] focus:ring-2 focus:ring-[#795548]/10"
-                />
-              </div>
-            </div>
-
-            {/* Profile Photo */}
-            <div>
-              <label
-                htmlFor="photoURL"
-                className="mb-2 block text-sm font-semibold text-[#40352F]"
-              >
-                Profile Photo URL
-              </label>
-
-              <input
-                id="photoURL"
-                type="url"
-                value={photoURL}
-                onChange={(event) => setPhotoURL(event.target.value)}
-                placeholder="https://example.com/photo.jpg"
-                required
-                className="w-full rounded-xl border border-[#E5D8CD] bg-[#FFFEFC] px-4 py-3.5 text-sm text-[#29231F] outline-none transition placeholder:text-[#A69A91] focus:border-[#795548] focus:ring-2 focus:ring-[#795548]/10"
-              />
-
-              <p className="mt-1.5 text-xs text-[#95877D]">
-                Enter a publicly accessible image URL.
+              <p className="mt-1.5 text-xs leading-5 text-[#796E66] sm:text-sm">
+                Fill in your details to get started.
               </p>
             </div>
 
-            {/* Password */}
-            <div>
-              <label
-                htmlFor="password"
-                className="mb-2 block text-sm font-semibold text-[#40352F]"
-              >
-                Password
-              </label>
+            <form onSubmit={handleRegister} className="space-y-3.5">
 
-              <div className="relative">
-                <input
-                  id="password"
-                  type={showPassword ? "text" : "password"}
-                  value={password}
-                  onChange={(event) => {
-                    const value = event.target.value;
-                    setPassword(value);
+              {/* Name and Email */}
+              <div className="grid grid-cols-1 gap-3.5 sm:grid-cols-2">
+                <div className="min-w-0">
+                  <label
+                    htmlFor="name"
+                    className="mb-1.5 block text-xs font-semibold text-[#40352F] sm:text-sm"
+                  >
+                    Full Name
+                  </label>
 
-                    if (passwordError) {
-                      setPasswordError(validatePassword(value));
-                    }
-                  }}
-                  placeholder="Create your password"
-                  autoComplete="new-password"
-                  minLength={6}
-                  required
-                  aria-invalid={!!passwordError}
-                  aria-describedby={
-                    passwordError ? "password-requirements" : undefined
-                  }
-                  className="w-full rounded-xl border border-[#E5D8CD] bg-[#FFFEFC] px-4 py-3.5 pr-12 text-sm text-[#29231F] outline-none transition placeholder:text-[#A69A91] focus:border-[#795548] focus:ring-2 focus:ring-[#795548]/10 [&::-ms-reveal]:hidden"
-                />
+                  <input
+                    id="name"
+                    type="text"
+                    value={name}
+                    onChange={(event) => setName(event.target.value)}
+                    placeholder="Enter your name"
+                    autoComplete="name"
+                    required
+                    className="w-full min-w-0 rounded-lg border border-[#E5D8CD] bg-[#FFFEFC] px-3.5 py-2.5 text-xs text-[#29231F] outline-none transition placeholder:text-[#A69A91] focus:border-[#795548] focus:ring-2 focus:ring-[#795548]/10 sm:text-sm"
+                  />
+                </div>
 
-                <button
-                  type="button"
-                  onClick={() => setShowPassword(!showPassword)}
-                  aria-label={showPassword ? "Hide password" : "Show password"}
-                  className="absolute right-4 top-1/2 -translate-y-1/2 text-[#8A7C72] transition hover:text-[#795548]"
-                >
-                  {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
-                </button>
+                <div className="min-w-0">
+                  <label
+                    htmlFor="email"
+                    className="mb-1.5 block text-xs font-semibold text-[#40352F] sm:text-sm"
+                  >
+                    Email Address
+                  </label>
+
+                  <input
+                    id="email"
+                    type="email"
+                    value={email}
+                    onChange={(event) => setEmail(event.target.value)}
+                    placeholder="you@example.com"
+                    autoComplete="email"
+                    required
+                    className="w-full min-w-0 rounded-lg border border-[#E5D8CD] bg-[#FFFEFC] px-3.5 py-2.5 text-xs text-[#29231F] outline-none transition placeholder:text-[#A69A91] focus:border-[#795548] focus:ring-2 focus:ring-[#795548]/10 sm:text-sm"
+                  />
+                </div>
               </div>
 
-              {passwordError && (
-                <p
-                  id="password-requirements"
-                  className="mt-2 text-xs font-medium text-red-600"
+              {/* Profile Photo */}
+              <div>
+                <label
+                  htmlFor="photoURL"
+                  className="mb-1.5 block text-xs font-semibold text-[#40352F] sm:text-sm"
                 >
-                  {passwordError}
+                  Profile Photo URL
+                </label>
+
+                <input
+                  id="photoURL"
+                  type="url"
+                  value={photoURL}
+                  onChange={(event) => setPhotoURL(event.target.value)}
+                  placeholder="https://example.com/photo.jpg"
+                  required
+                  className="w-full rounded-lg border border-[#E5D8CD] bg-[#FFFEFC] px-3.5 py-2.5 text-xs text-[#29231F] outline-none transition placeholder:text-[#A69A91] focus:border-[#795548] focus:ring-2 focus:ring-[#795548]/10 sm:text-sm"
+                />
+
+                <p className="mt-1 text-[11px] text-[#95877D]">
+                  Enter a publicly accessible image URL.
                 </p>
-              )}
+              </div>
+
+              {/* Password */}
+              <div>
+                <label
+                  htmlFor="password"
+                  className="mb-1.5 block text-xs font-semibold text-[#40352F] sm:text-sm"
+                >
+                  Password
+                </label>
+
+                <div className="relative">
+                  <input
+                    id="password"
+                    type={showPassword ? "text" : "password"}
+                    value={password}
+                    onChange={(event) => {
+                      const value = event.target.value;
+                      setPassword(value);
+
+                      if (passwordError) {
+                        setPasswordError(validatePassword(value));
+                      }
+                    }}
+                    placeholder="Create your password"
+                    autoComplete="new-password"
+                    minLength={6}
+                    required
+                    aria-invalid={!!passwordError}
+                    aria-describedby={
+                      passwordError ? "password-requirements" : undefined
+                    }
+                    className="w-full rounded-lg border border-[#E5D8CD] bg-[#FFFEFC] px-3.5 py-2.5 pr-11 text-xs text-[#29231F] outline-none transition placeholder:text-[#A69A91] focus:border-[#795548] focus:ring-2 focus:ring-[#795548]/10 [&::-ms-reveal]:hidden sm:text-sm"
+                  />
+
+                  <button
+                    type="button"
+                    onClick={() => setShowPassword(!showPassword)}
+                    aria-label={showPassword ? "Hide password" : "Show password"}
+                    className="absolute right-3.5 top-1/2 -translate-y-1/2 text-[#8A7C72] transition hover:text-[#795548]"
+                  >
+                    {showPassword ? <EyeOff size={17} /> : <Eye size={17} />}
+                  </button>
+                </div>
+
+                {passwordError && (
+                  <p
+                    id="password-requirements"
+                    className="mt-1.5 text-xs font-medium text-red-600"
+                  >
+                    {passwordError}
+                  </p>
+                )}
+              </div>
+
+              {/* Register Button */}
+              <button
+                type="submit"
+                disabled={loading || googleLoading}
+                className="flex w-full items-center justify-center gap-2 rounded-lg bg-[#795548] px-5 py-2.5 text-xs font-semibold text-white transition hover:bg-[#604438] disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
+              >
+                {loading && <Loader2 size={16} className="animate-spin" />}
+                {loading ? "Creating Account..." : "Create Account"}
+              </button>
+            </form>
+
+            {/* Divider */}
+            <div className="my-4 flex items-center gap-3">
+              <div className="h-px flex-1 bg-[#EAE1D9]" />
+
+              <span className="text-[10px] font-medium text-[#A3978E]">
+                OR CONTINUE WITH
+              </span>
+
+              <div className="h-px flex-1 bg-[#EAE1D9]" />
             </div>
 
-            {/* Register Button */}
+            {/* Google Registration */}
             <button
-              type="submit"
+              type="button"
+              onClick={handleGoogleRegister}
               disabled={loading || googleLoading}
-              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[#795548] px-5 py-3.5 text-sm font-semibold text-white transition hover:bg-[#604438] disabled:cursor-not-allowed disabled:opacity-60"
+              className="flex w-full items-center justify-center gap-2.5 rounded-lg border border-[#E5D8CD] bg-white px-4 py-2.5 text-xs font-semibold text-[#40352F] transition hover:bg-[#F8F5F0] disabled:cursor-not-allowed disabled:opacity-60 sm:text-sm"
             >
-              {loading && <Loader2 size={18} className="animate-spin" />}
-              {loading ? "Creating Account..." : "Create Account"}
+              {googleLoading ? (
+                <Loader2 size={16} className="animate-spin" />
+              ) : (
+                <svg viewBox="0 0 48 48" className="h-[18px] w-[18px]" aria-hidden="true">
+                  <path
+                    fill="#EA4335"
+                    d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"
+                    transform="translate(0 3)"
+                  />
+                  <path
+                    fill="#4285F4"
+                    d="M46.98 24.55c0-1.57-.15-3.09-.42-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.73 7.18l7.67 5.95c4.48-4.14 7.1-10.24 7.1-17.6Z"
+                  />
+                  <path
+                    fill="#FBBC05"
+                    d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.52 2.56 10.78l7.97-6.19Z"
+                  />
+                  <path
+                    fill="#34A853"
+                    d="M24 48c6.48 0 11.93-2.13 15.9-5.8l-7.67-5.95c-2.13 1.43-4.86 2.27-8.23 2.27-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 43.62 14.62 48 24 48Z"
+                  />
+                </svg>
+              )}
+
+              {googleLoading ? "Connecting to Google..." : "Continue with Google"}
             </button>
-          </form>
 
-          {/* Divider */}
-          <div className="my-5 flex items-center gap-4">
-            <div className="h-px flex-1 bg-[#EAE1D9]" />
-            <span className="text-xs font-medium text-[#A3978E]">
-              OR CONTINUE WITH
-            </span>
-            <div className="h-px flex-1 bg-[#EAE1D9]" />
+            {/* Login Link */}
+            <p className="mt-5 text-center text-xs text-[#796E66] sm:text-sm">
+              Already have an account?{" "}
+              <Link
+                href="/login"
+                className="font-semibold text-[#795548] transition hover:text-[#4E342E]"
+              >
+                Log In
+              </Link>
+            </p>
           </div>
-
-          {/* Google Registration */}
-          <button
-            type="button"
-            onClick={handleGoogleRegister}
-            disabled={loading || googleLoading}
-            className="flex w-full items-center justify-center gap-3 rounded-xl border border-[#E5D8CD] bg-white px-5 py-3 text-sm font-semibold text-[#40352F] transition hover:bg-[#F8F5F0] disabled:cursor-not-allowed disabled:opacity-60"
-          >
-            {googleLoading ? (
-              <Loader2 size={18} className="animate-spin" />
-            ) : (
-              <svg viewBox="0 0 48 48" className="h-5 w-5" aria-hidden="true">
-                <path
-                  fill="#EA4335"
-                  d="M24 9.5c3.54 0 6.71 1.22 9.21 3.6l6.85-6.85C35.9 2.38 30.47 0 24 0 14.62 0 6.51 5.38 2.56 13.22l7.98 6.19C12.43 13.72 17.74 9.5 24 9.5Z"
-                  transform="translate(0 3)"
-                />
-                <path
-                  fill="#4285F4"
-                  d="M46.98 24.55c0-1.57-.15-3.09-.42-4.55H24v9.02h12.94c-.58 2.96-2.26 5.48-4.73 7.18l7.67 5.95c4.48-4.14 7.1-10.24 7.1-17.6Z"
-                />
-                <path
-                  fill="#FBBC05"
-                  d="M10.53 28.59A14.4 14.4 0 0 1 9.75 24c0-1.59.27-3.13.76-4.59l-7.98-6.19A23.9 23.9 0 0 0 0 24c0 3.87.93 7.52 2.56 10.78l7.97-6.19Z"
-                />
-                <path
-                  fill="#34A853"
-                  d="M24 48c6.48 0 11.93-2.13 15.9-5.8l-7.67-5.95c-2.13 1.43-4.86 2.27-8.23 2.27-6.26 0-11.57-4.22-13.47-9.91l-7.98 6.19C6.51 43.62 14.62 48 24 48Z"
-                />
-              </svg>
-            )}
-
-            {googleLoading ? "Connecting to Google..." : "Continue with Google"}
-          </button>
-
-          <p className="mt-6 text-center text-sm text-[#796E66]">
-            Already have an account?{" "}
-            <Link
-              href="/login"
-              className="font-semibold text-[#795548] transition hover:text-[#4E342E]"
-            >
-              Log In
-            </Link>
-          </p>
         </section>
       </div>
     </main>

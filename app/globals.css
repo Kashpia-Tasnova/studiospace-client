@@ -138,7 +138,7 @@ img {
 
 .navbar-container {
   width: min(1200px, calc(100% - 48px));
-  min-height: 84px;
+  min-height: 70px;
   margin: 0 auto;
   display: flex;
   align-items: center;
@@ -163,8 +163,8 @@ img {
 
 .navbar-logo-image {
   display: block;
-  width: 160px;
-  height: 72px;
+  width: 140px;
+  height: 62px;
   object-fit: contain;
   background: transparent;
 }
@@ -175,14 +175,14 @@ img {
   display: flex;
   align-items: center;
   justify-content: center;
-  gap: 36px;
+  gap: 30px;
 }
 
 .navbar-link {
   position: relative;
   padding: 10px 0;
   color: var(--color-cream);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 500;
   transition: color 0.25s ease;
 }
@@ -259,13 +259,13 @@ img {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  min-width: 112px;
-  padding: 13px 24px;
+  min-width: 100px;
+  padding: 10px 20px;
   border: 1px solid var(--color-cream);
   border-radius: 5px;
   background: var(--color-cream);
   color: var(--color-mocha);
-  font-size: 15px;
+  font-size: 14px;
   font-weight: 700;
   transition: all 0.25s ease;
 }
@@ -319,8 +319,8 @@ img {
   }
 
   .navbar-logo-image {
-    width: 135px;
-    height: 62px;
+    width: 125px;
+    height: 56px;
   }
 
   .navbar-register-button {
@@ -340,7 +340,7 @@ img {
 
 @media (max-width: 760px) {
   .navbar-container {
-    min-height: 74px;
+    min-height: 64px;
   }
 
   .navbar-links,
@@ -349,8 +349,8 @@ img {
   }
 
   .navbar-logo-image {
-    width: 135px;
-    height: 62px;
+    width: 120px;
+    height: 54px;
   }
 
   .navbar-menu-button {
@@ -812,7 +812,7 @@ img {
 .hero-slide {
   position: relative;
   width: 100%;
-  min-height: calc(100svh - 84px);
+  min-height: calc(100svh - 110px);
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
@@ -822,8 +822,8 @@ img {
   display: flex;
   align-items: center;
   width: 100%;
-  min-height: calc(100svh - 84px);
-  padding: 80px 24px;
+  min-height: calc(100svh - 110px);
+  padding: 55px 24px 75px;
   background: linear-gradient(
     90deg,
     rgba(32, 32, 32, 0.88) 0%,
@@ -831,6 +831,7 @@ img {
     rgba(32, 32, 32, 0.15) 100%
   );
 }
+
 .hero-content {
   width: min(1200px, 100%);
   margin: 0 auto;
@@ -910,7 +911,7 @@ img {
 @media (max-width: 768px) {
   .hero-slide,
   .hero-overlay {
-    min-height: calc(100svh - 74px);
+    min-height: calc(100svh - 90px);
   }
 
   .hero-slide {
@@ -918,7 +919,7 @@ img {
   }
 
   .hero-overlay {
-    padding: 65px 24px;
+    padding: 45px 24px 65px;
     background: linear-gradient(
       90deg,
       rgba(32, 32, 32, 0.88),
@@ -933,12 +934,16 @@ img {
   .hero-content p {
     font-size: 15px;
   }
+
+  .hero-swiper .swiper-pagination {
+    bottom: 16px !important;
+  }
 }
 
 @media (max-width: 480px) {
   .hero-slide,
   .hero-overlay {
-    min-height: calc(100svh - 74px);
+    min-height: calc(100svh - 84px);
   }
 
   .hero-slide {
@@ -946,7 +951,7 @@ img {
   }
 
   .hero-overlay {
-    padding: 55px 20px;
+    padding: 40px 20px 60px;
   }
 
   .hero-subtitle {
@@ -966,5 +971,9 @@ img {
   .hero-button {
     padding: 13px 20px;
     font-size: 13px;
+  }
+
+  .hero-swiper .swiper-pagination {
+    bottom: 14px !important;
   }
 }

@@ -198,54 +198,55 @@ export default function MyProfilePage() {
   if (isPending || !session) {
     return (
       <main className="flex min-h-[70vh] items-center justify-center bg-[#f8f5f1]">
-        <Loader2 className="h-8 w-8 animate-spin text-[#604438]" />
+        <Loader2 className="h-7 w-7 animate-spin text-[#604438]" />
       </main>
     );
   }
 
   return (
-    <main className="min-h-screen bg-[#f8f5f1] px-4 py-12">
-      <div className="mx-auto max-w-3xl">
-        <div className="overflow-hidden rounded-2xl border border-[#e8ded5] bg-white shadow-sm">
+    <main className="min-h-screen bg-[#f8f5f1] px-4 py-8 sm:py-10">
+      <div className="mx-auto max-w-xl">
+        <div className="overflow-hidden rounded-xl border border-[#e8ded5] bg-white shadow-sm">
 
           {/* Page Header */}
-          <div className="bg-[#604438] px-6 py-8 text-white sm:px-10">
-            <div className="mb-4 flex h-14 w-14 items-center justify-center rounded-full bg-white/15">
-              <UserRound size={28} />
+          <div className="bg-[#604438] px-5 py-5 text-white sm:px-7">
+            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-white/15">
+              <UserRound size={21} />
             </div>
 
-            <h1 className="text-2xl font-semibold sm:text-3xl">
+            <h1 className="text-xl font-semibold">
               My Profile
             </h1>
 
-            <p className="mt-2 text-sm text-[#eee2d9]">
+            <p className="mt-1.5 text-xs leading-5 text-[#eee2d9] sm:text-sm">
               Manage your personal information and account security.
             </p>
           </div>
 
-          <div className="p-6 sm:p-10">
+          <div className="p-5 sm:p-7">
 
             {/* Profile Information Form */}
             <form
               id="profile-form"
               onSubmit={handleUpdateProfile}
-              className="space-y-6"
+              className="space-y-4"
             >
               {/* Profile Picture */}
-              <div className="flex flex-col items-center gap-3 border-b border-[#eee7e1] pb-7">
+              <div className="flex flex-col items-center gap-2 border-b border-[#eee7e1] pb-5">
                 {image ? (
                   <img
                     src={image}
                     alt="Profile"
-                    className="h-24 w-24 rounded-full border-4 border-[#eee7e1] object-cover"
+                    referrerPolicy="no-referrer"
+                    className="h-16 w-16 rounded-full border-[3px] border-[#eee7e1] object-cover"
                   />
                 ) : (
-                  <div className="flex h-24 w-24 items-center justify-center rounded-full bg-[#604438] text-3xl font-semibold text-white">
+                  <div className="flex h-16 w-16 items-center justify-center rounded-full bg-[#604438] text-xl font-semibold text-white">
                     {name.charAt(0).toUpperCase() || "U"}
                   </div>
                 )}
 
-                <p className="text-sm text-[#76665d]">
+                <p className="text-xs text-[#76665d]">
                   Your profile picture
                 </p>
               </div>
@@ -254,15 +255,15 @@ export default function MyProfilePage() {
               <div>
                 <label
                   htmlFor="name"
-                  className="mb-2 block text-sm font-semibold text-[#49372e]"
+                  className="mb-1.5 block text-sm font-semibold text-[#49372e]"
                 >
                   Full Name
                 </label>
 
                 <div className="relative">
                   <UserRound
-                    size={19}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-[#99877b]"
+                    size={17}
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99877b]"
                   />
 
                   <input
@@ -271,7 +272,7 @@ export default function MyProfilePage() {
                     value={name}
                     onChange={(event) => setName(event.target.value)}
                     placeholder="Enter your full name"
-                    className="w-full rounded-lg border border-[#e4d9d0] bg-[#fdfcfb] py-3 pl-12 pr-4 text-sm text-[#49372e] outline-none transition focus:border-[#604438] focus:ring-2 focus:ring-[#604438]/10"
+                    className="w-full rounded-md border border-[#e4d9d0] bg-[#fdfcfb] py-2.5 pl-10 pr-3.5 text-sm text-[#49372e] outline-none transition focus:border-[#604438] focus:ring-2 focus:ring-[#604438]/10"
                     required
                   />
                 </div>
@@ -281,15 +282,15 @@ export default function MyProfilePage() {
               <div>
                 <label
                   htmlFor="email"
-                  className="mb-2 block text-sm font-semibold text-[#49372e]"
+                  className="mb-1.5 block text-sm font-semibold text-[#49372e]"
                 >
                   Email Address
                 </label>
 
                 <div className="relative">
                   <Mail
-                    size={19}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-[#99877b]"
+                    size={17}
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99877b]"
                   />
 
                   <input
@@ -297,11 +298,11 @@ export default function MyProfilePage() {
                     type="email"
                     value={email}
                     readOnly
-                    className="w-full cursor-not-allowed rounded-lg border border-[#e4d9d0] bg-[#f2efec] py-3 pl-12 pr-4 text-sm text-[#84776e] outline-none"
+                    className="w-full cursor-not-allowed rounded-md border border-[#e4d9d0] bg-[#f2efec] py-2.5 pl-10 pr-3.5 text-sm text-[#84776e] outline-none"
                   />
                 </div>
 
-                <p className="mt-2 text-xs text-[#99877b]">
+                <p className="mt-1.5 text-xs text-[#99877b]">
                   Your email address cannot be changed here.
                 </p>
               </div>
@@ -310,15 +311,15 @@ export default function MyProfilePage() {
               <div>
                 <label
                   htmlFor="image"
-                  className="mb-2 block text-sm font-semibold text-[#49372e]"
+                  className="mb-1.5 block text-sm font-semibold text-[#49372e]"
                 >
                   Profile Photo URL
                 </label>
 
                 <div className="relative">
                   <Camera
-                    size={19}
-                    className="absolute left-4 top-1/2 -translate-y-1/2 text-[#99877b]"
+                    size={17}
+                    className="absolute left-3.5 top-1/2 -translate-y-1/2 text-[#99877b]"
                   />
 
                   <input
@@ -327,45 +328,45 @@ export default function MyProfilePage() {
                     value={image}
                     onChange={(event) => setImage(event.target.value)}
                     placeholder="https://example.com/photo.jpg"
-                    className="w-full rounded-lg border border-[#e4d9d0] bg-[#fdfcfb] py-3 pl-12 pr-4 text-sm text-[#49372e] outline-none transition focus:border-[#604438] focus:ring-2 focus:ring-[#604438]/10"
+                    className="w-full rounded-md border border-[#e4d9d0] bg-[#fdfcfb] py-2.5 pl-10 pr-3.5 text-sm text-[#49372e] outline-none transition focus:border-[#604438] focus:ring-2 focus:ring-[#604438]/10"
                   />
                 </div>
 
-                <p className="mt-2 text-xs text-[#99877b]">
+                <p className="mt-1.5 text-xs text-[#99877b]">
                   Paste an image URL to update your profile picture.
                 </p>
               </div>
             </form>
 
-            {/* Change Password Section - Outside Profile Form */}
+            {/* Change Password Section */}
             {checkingAccounts ? (
-              <div className="mt-6 flex items-center justify-center border-t border-[#eee7e1] pt-6">
-                <Loader2 className="h-5 w-5 animate-spin text-[#604438]" />
-                <span className="ml-2 text-sm text-[#76665d]">
+              <div className="mt-4 flex items-center justify-center border-t border-[#eee7e1] pt-4">
+                <Loader2 className="h-4 w-4 animate-spin text-[#604438]" />
+                <span className="ml-2 text-xs text-[#76665d]">
                   Checking account settings...
                 </span>
               </div>
             ) : hasCredentialAccount ? (
-              <section className="mt-6 border-t border-[#eee7e1] pt-6">
+              <section className="mt-4 border-t border-[#eee7e1] pt-4">
 
                 <button
                   type="button"
                   onClick={() =>
                     setShowPasswordFields((previous) => !previous)
                   }
-                  className="flex w-full items-center justify-between gap-4 rounded-lg border border-[#e4d9d0] bg-[#fdfcfb] p-4 text-left transition hover:border-[#604438]"
+                  className="flex w-full items-center justify-between gap-3 rounded-md border border-[#e4d9d0] bg-[#fdfcfb] p-3 text-left transition hover:border-[#604438]"
                 >
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-11 w-11 shrink-0 items-center justify-center rounded-full bg-[#f3ece6] text-[#604438]">
-                      <LockKeyhole size={21} />
+                  <div className="flex items-center gap-2.5">
+                    <div className="flex h-9 w-9 shrink-0 items-center justify-center rounded-full bg-[#f3ece6] text-[#604438]">
+                      <LockKeyhole size={18} />
                     </div>
 
                     <div>
-                      <h2 className="text-base font-semibold text-[#49372e]">
+                      <h2 className="text-sm font-semibold text-[#49372e]">
                         Change Password
                       </h2>
 
-                      <p className="mt-1 text-xs text-[#84776e]">
+                      <p className="mt-0.5 text-xs text-[#84776e]">
                         Update your account password.
                       </p>
                     </div>
@@ -373,12 +374,12 @@ export default function MyProfilePage() {
 
                   {showPasswordFields ? (
                     <ChevronUp
-                      size={21}
+                      size={18}
                       className="shrink-0 text-[#604438]"
                     />
                   ) : (
                     <ChevronDown
-                      size={21}
+                      size={18}
                       className="shrink-0 text-[#604438]"
                     />
                   )}
@@ -388,12 +389,12 @@ export default function MyProfilePage() {
                 {showPasswordFields && (
                   <form
                     onSubmit={handleChangePassword}
-                    className="mt-5 space-y-5 rounded-lg border border-[#eee7e1] bg-[#fdfcfb] p-5 sm:p-6"
+                    className="mt-3 space-y-3 rounded-md border border-[#eee7e1] bg-[#fdfcfb] p-3.5 sm:p-4"
                   >
                     <div>
                       <label
                         htmlFor="currentPassword"
-                        className="mb-2 block text-sm font-semibold text-[#49372e]"
+                        className="mb-1.5 block text-sm font-semibold text-[#49372e]"
                       >
                         Current Password
                       </label>
@@ -407,7 +408,7 @@ export default function MyProfilePage() {
                           setCurrentPassword(event.target.value)
                         }
                         placeholder="Enter your current password"
-                        className="w-full rounded-lg border border-[#e4d9d0] bg-white px-4 py-3 text-sm text-[#49372e] outline-none transition focus:border-[#604438] focus:ring-2 focus:ring-[#604438]/10"
+                        className="w-full rounded-md border border-[#e4d9d0] bg-white px-3.5 py-2.5 text-sm text-[#49372e] outline-none transition focus:border-[#604438] focus:ring-2 focus:ring-[#604438]/10"
                         required
                       />
                     </div>
@@ -415,7 +416,7 @@ export default function MyProfilePage() {
                     <div>
                       <label
                         htmlFor="newPassword"
-                        className="mb-2 block text-sm font-semibold text-[#49372e]"
+                        className="mb-1.5 block text-sm font-semibold text-[#49372e]"
                       >
                         New Password
                       </label>
@@ -429,11 +430,11 @@ export default function MyProfilePage() {
                           setNewPassword(event.target.value)
                         }
                         placeholder="Enter your new password"
-                        className="w-full rounded-lg border border-[#e4d9d0] bg-white px-4 py-3 text-sm text-[#49372e] outline-none transition focus:border-[#604438] focus:ring-2 focus:ring-[#604438]/10"
+                        className="w-full rounded-md border border-[#e4d9d0] bg-white px-3.5 py-2.5 text-sm text-[#49372e] outline-none transition focus:border-[#604438] focus:ring-2 focus:ring-[#604438]/10"
                         required
                       />
 
-                      <p className="mt-2 text-xs text-[#99877b]">
+                      <p className="mt-1.5 text-xs leading-5 text-[#99877b]">
                         At least 6 characters, including uppercase and lowercase letters.
                       </p>
                     </div>
@@ -441,7 +442,7 @@ export default function MyProfilePage() {
                     <div>
                       <label
                         htmlFor="confirmPassword"
-                        className="mb-2 block text-sm font-semibold text-[#49372e]"
+                        className="mb-1.5 block text-sm font-semibold text-[#49372e]"
                       >
                         Confirm New Password
                       </label>
@@ -455,25 +456,25 @@ export default function MyProfilePage() {
                           setConfirmPassword(event.target.value)
                         }
                         placeholder="Confirm your new password"
-                        className="w-full rounded-lg border border-[#e4d9d0] bg-white px-4 py-3 text-sm text-[#49372e] outline-none transition focus:border-[#604438] focus:ring-2 focus:ring-[#604438]/10"
+                        className="w-full rounded-md border border-[#e4d9d0] bg-white px-3.5 py-2.5 text-sm text-[#49372e] outline-none transition focus:border-[#604438] focus:ring-2 focus:ring-[#604438]/10"
                         required
                       />
                     </div>
 
-                    <div className="flex flex-col gap-3 sm:flex-row">
+                    <div className="flex flex-col gap-2.5 pt-1 sm:flex-row">
                       <button
                         type="submit"
                         disabled={isChangingPassword}
-                        className="flex flex-1 items-center justify-center gap-2 rounded-lg bg-[#604438] px-5 py-3 text-sm font-semibold text-white transition hover:bg-[#493329] disabled:cursor-not-allowed disabled:opacity-60"
+                        className="flex flex-1 items-center justify-center gap-2 rounded-md bg-[#604438] px-4 py-2.5 text-sm font-semibold text-white transition hover:bg-[#493329] disabled:cursor-not-allowed disabled:opacity-60"
                       >
                         {isChangingPassword ? (
                           <>
-                            <Loader2 size={18} className="animate-spin" />
+                            <Loader2 size={16} className="animate-spin" />
                             Updating...
                           </>
                         ) : (
                           <>
-                            <LockKeyhole size={18} />
+                            <LockKeyhole size={16} />
                             Update Password
                           </>
                         )}
@@ -483,9 +484,9 @@ export default function MyProfilePage() {
                         type="button"
                         onClick={handleCancelPasswordChange}
                         disabled={isChangingPassword}
-                        className="flex items-center justify-center gap-2 rounded-lg border border-[#e4d9d0] px-5 py-3 text-sm font-semibold text-[#604438] transition hover:bg-[#f3ece6] disabled:opacity-60"
+                        className="flex items-center justify-center gap-2 rounded-md border border-[#e4d9d0] px-4 py-2.5 text-sm font-semibold text-[#604438] transition hover:bg-[#f3ece6] disabled:opacity-60"
                       >
-                        <X size={17} />
+                        <X size={15} />
                         Cancel
                       </button>
                     </div>
@@ -494,21 +495,21 @@ export default function MyProfilePage() {
               </section>
             ) : null}
 
-            {/* Save Profile Button - Connected to Profile Form */}
+            {/* Save Profile Button */}
             <button
               type="submit"
               form="profile-form"
               disabled={isSaving}
-              className="mt-6 flex w-full items-center justify-center gap-2 rounded-lg bg-[#604438] px-6 py-3.5 text-sm font-semibold text-white transition hover:bg-[#493329] disabled:cursor-not-allowed disabled:opacity-60"
+              className="mt-4 flex w-full items-center justify-center gap-2 rounded-md bg-[#604438] px-5 py-2.5 text-sm font-semibold text-white transition hover:bg-[#493329] disabled:cursor-not-allowed disabled:opacity-60"
             >
               {isSaving ? (
                 <>
-                  <Loader2 size={18} className="animate-spin" />
+                  <Loader2 size={17} className="animate-spin" />
                   Saving Changes...
                 </>
               ) : (
                 <>
-                  <Save size={18} />
+                  <Save size={17} />
                   Save Changes
                 </>
               )}
