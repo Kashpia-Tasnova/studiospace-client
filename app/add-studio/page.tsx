@@ -5,10 +5,8 @@ import { useEffect, useState, type FormEvent } from "react";
 import { useRouter } from "next/navigation";
 import {
   Aperture,
-  ArrowLeft,
   Building2,
   Check,
-  ImagePlus,
   Loader2,
   MapPin,
   Plus,
@@ -63,10 +61,8 @@ export default function AddStudioPage() {
 
   const [selectedImages, setSelectedImages] = useState<File[]>([]);
   const [imagePreviews, setImagePreviews] = useState<string[]>([]);
-
   const [isSubmitting, setIsSubmitting] = useState(false);
 
-  // Create and clean up image preview URLs.
   useEffect(() => {
     const previews = selectedImages.map((file) =>
       URL.createObjectURL(file)
@@ -115,7 +111,6 @@ export default function AddStudioPage() {
       toast.success(`${validFiles.length} image(s) selected.`);
     }
 
-    // Allow selecting the same image again after removing it.
     event.target.value = "";
   }
 
@@ -138,6 +133,7 @@ export default function AddStudioPage() {
 
     const response = await fetch(`${API_URL}/api/upload/images`, {
       method: "POST",
+      credentials: "include",
       body: formData,
     });
 
@@ -184,7 +180,12 @@ export default function AddStudioPage() {
       return;
     }
 
-    if (!category || !name.trim() || !description.trim() || !location.trim()) {
+    if (
+      !category ||
+      !name.trim() ||
+      !description.trim() ||
+      !location.trim()
+    ) {
       toast.error("Please complete all required studio information.");
       return;
     }
@@ -192,18 +193,19 @@ export default function AddStudioPage() {
     setIsSubmitting(true);
 
     try {
-      // First upload selected images to ImgBB.
       toast.info(
         selectedImages.length > 0
           ? `Uploading ${selectedImages.length} image(s)...`
           : "Saving your studio..."
       );
 
+      // Step 1: Upload images to ImgBB.
       const uploadedImageUrls = await uploadImages();
 
-      // Then save studio information and uploaded image URLs.
+      // Step 2: Create the studio using the authenticated session.
       const response = await fetch(`${API_URL}/api/studios`, {
         method: "POST",
+        credentials: "include",
         headers: {
           "Content-Type": "application/json",
         },
@@ -281,15 +283,6 @@ export default function AddStudioPage() {
   return (
     <main className="min-h-screen bg-[#f8f5f1] px-4 py-8 sm:py-10">
       <div className="mx-auto max-w-3xl">
-        <button
-          type="button"
-          onClick={() => router.back()}
-          className="mb-5 inline-flex items-center gap-2 text-sm font-medium text-[#76665d] transition hover:text-[#604438]"
-        >
-          <ArrowLeft size={17} />
-          Go Back
-        </button>
-
         <div className="overflow-hidden rounded-xl border border-[#eae2da] bg-white shadow-sm">
           <div className="bg-[#604438] px-5 py-6 text-white sm:px-8">
             <div className="flex items-center gap-3">
@@ -309,7 +302,6 @@ export default function AddStudioPage() {
           </div>
 
           <form onSubmit={handleSubmit} className="space-y-6 p-5 sm:p-8">
-            {/* Studio Information */}
             <section>
               <h2 className="mb-4 text-base font-semibold text-[#30251f]">
                 Studio Information
@@ -373,7 +365,6 @@ export default function AddStudioPage() {
 
             <div className="border-t border-[#eee7e0]" />
 
-            {/* Pricing and Capacity */}
             <section>
               <h2 className="mb-4 text-base font-semibold text-[#30251f]">
                 Pricing & Capacity
@@ -432,7 +423,6 @@ export default function AddStudioPage() {
 
             <div className="border-t border-[#eee7e0]" />
 
-            {/* Location */}
             <section>
               <h2 className="mb-4 text-base font-semibold text-[#30251f]">
                 Studio Location
@@ -460,7 +450,6 @@ export default function AddStudioPage() {
 
             <div className="border-t border-[#eee7e0]" />
 
-            {/* Multiple Studio Image Upload */}
             <section>
               <h2 className="mb-2 text-base font-semibold text-[#30251f]">
                 Studio Images
@@ -560,7 +549,6 @@ export default function AddStudioPage() {
 
             <div className="border-t border-[#eee7e0]" />
 
-            {/* Amenities */}
             <section>
               <h2 className="mb-2 text-base font-semibold text-[#30251f]">
                 Studio Amenities
@@ -603,7 +591,6 @@ export default function AddStudioPage() {
 
             <div className="border-t border-[#eee7e0]" />
 
-            {/* Host Information */}
             <section>
               <h2 className="mb-2 text-base font-semibold text-[#30251f]">
                 Host Information
@@ -640,7 +627,6 @@ export default function AddStudioPage() {
               </div>
             </section>
 
-            {/* Submit */}
             <div className="flex flex-col-reverse gap-3 border-t border-[#eee7e0] pt-5 sm:flex-row sm:justify-end">
               <button
                 type="button"
