@@ -4,6 +4,7 @@ import FeaturedStudios from "@/components/home/FeaturedStudios";
 import BrowseCategories from "@/components/home/BrowseCategories";
 import HowItWorks from "@/components/home/HowItWorks";
 import HostSupport from "@/components/home/HostSupport";
+export const dynamic = "force-dynamic";
 
 export default function Home() {
   return (

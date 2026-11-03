@@ -1,5 +1,4 @@
 
-import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -319,17 +318,23 @@ export default async function StudioDetailsPage({
                 </div>
               </div>
 
-              <button
-                type="button"
-                disabled={studio.status !== "available"}
-                className="mt-7 w-full rounded-xl bg-[#A67C63] px-5 py-4 text-sm font-semibold text-white transition-all duration-300 hover:bg-[#202020] disabled:cursor-not-allowed disabled:opacity-50"
-              >
-                Book This Studio
-              </button>
-
-              <p className="mt-4 text-center text-xs leading-6 text-[#81756D]">
-                Booking functionality will be available soon.
-              </p>
+              {/* Booking Button */}
+              {studio.status === "available" ? (
+                <Link
+  href={`/studios/${id}/book`}
+  className="mt-7 block w-full rounded-xl bg-[#A67C63] px-5 py-4 text-center !text-white text-sm font-semibold transition-all duration-300 hover:bg-[#202020] hover:!text-white"
+>
+  Book This Studio
+</Link>
+              ) : (
+                <button
+                  type="button"
+                  disabled
+                  className="mt-7 w-full cursor-not-allowed rounded-xl bg-[#A67C63] px-5 py-4 text-sm font-semibold text-white opacity-50"
+                >
+                  Currently Unavailable
+                </button>
+              )}
             </div>
           </aside>
         </div>

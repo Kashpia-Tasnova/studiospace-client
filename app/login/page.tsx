@@ -16,6 +16,24 @@ import {
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
 
+// Get the intended destination after login
+function getRedirectPath() {
+  const params = new URLSearchParams(window.location.search);
+  const callbackURL = params.get("callbackURL");
+
+  // Allow only safe internal paths
+  if (
+    callbackURL &&
+    callbackURL.startsWith("/") &&
+    !callbackURL.startsWith("//") &&
+    !callbackURL.includes("\\")
+  ) {
+    return callbackURL;
+  }
+
+  return "/";
+}
+
 export default function LoginPage() {
   const router = useRouter();
 
@@ -54,10 +72,13 @@ export default function LoginPage() {
     setIsLoading(true);
 
     try {
+      const redirectPath = getRedirectPath();
+      const callbackURL = `${window.location.origin}${redirectPath}`;
+
       const { error } = await authClient.signIn.email({
         email: email.trim(),
         password,
-        callbackURL: "http://localhost:3000/",
+        callbackURL,
       });
 
       if (error) {
@@ -66,7 +87,8 @@ export default function LoginPage() {
       }
 
       toast.success("Welcome back! Login successful.");
-      router.push("/");
+
+      router.push(redirectPath);
       router.refresh();
     } catch {
       toast.error("Something went wrong. Please try again.");
@@ -80,10 +102,13 @@ export default function LoginPage() {
     setIsGoogleLoading(true);
 
     try {
+      const redirectPath = getRedirectPath();
+      const callbackURL = `${window.location.origin}${redirectPath}`;
+
       const { error } = await authClient.signIn.social({
         provider: "google",
-        callbackURL: "http://localhost:3000/",
-        errorCallbackURL: "http://localhost:3000/login",
+        callbackURL,
+        errorCallbackURL: `${window.location.origin}/login`,
       });
 
       if (error) {
