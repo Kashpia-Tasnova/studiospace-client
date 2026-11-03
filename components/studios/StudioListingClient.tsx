@@ -407,6 +407,7 @@ export default function StudioListingClient({
               <div className="relative h-60 overflow-hidden bg-[#E8D9CC]">
                 <Image
                   src={
+                    studio.images?.[0] ||
                     studioImages[studio.category] ||
                     studioImages.Photography
                   }

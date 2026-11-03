@@ -76,9 +76,10 @@ export default async function FeaturedStudios() {
                 <div className="relative h-60 overflow-hidden bg-[#E8D9CC]">
                   <Image
                     src={
+                      studio.images?.[0] ||
                       studioImages[studio.category] ||
                       studioImages.Photography
-                    }
+                }
                     alt={studio.name}
                     fill
                     sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"

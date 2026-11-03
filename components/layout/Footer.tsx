@@ -19,7 +19,7 @@ import {
 
 const quickLinks = [
   { name: "Home", href: "/" },
-  { name: "Explore Studios", href: "/#featured-studios" },
+  { name: "Explore Studios", href: "/studios" },
   { name: "How It Works", href: "/#how-it-works" },
   { name: "About Us", href: "/about" },
 ];
