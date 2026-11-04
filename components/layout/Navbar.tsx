@@ -16,6 +16,8 @@ import {
   CalendarCheck,
   LogOut,
   UserRound,
+  MessageSquare,
+  Star,
 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
@@ -276,9 +278,9 @@ export default function Navbar() {
                 />
               </button>
 
-              {/* Compact Desktop Dropdown */}
+              {/* Desktop Dropdown */}
               {profileMenuOpen && (
-                <div className="absolute right-0 top-full z-50 mt-2.5 w-56 overflow-hidden rounded-lg border border-[#E8D9CC] bg-white py-1.5 shadow-lg">
+                <div className="absolute right-0 top-full z-50 mt-2.5 w-60 overflow-hidden rounded-lg border border-[#E8D9CC] bg-white py-1.5 shadow-lg">
                   <div className="border-b border-[#EFE7E0] px-3.5 py-2.5">
                     <p className="truncate text-xs font-semibold text-[#352820]">
                       {user.name}
@@ -335,6 +337,25 @@ export default function Navbar() {
                     >
                       <CalendarCheck size={16} />
                       Manage Bookings
+                    </Link>
+
+                    {/* Review Links */}
+                    <div className="my-1 border-t border-[#EFE7E0]" />
+
+                    <Link
+                      href="/my-reviews"
+                      className="flex items-center gap-2.5 px-3.5 py-2 text-xs text-[#49382E] transition hover:bg-[#F8F5F0]"
+                    >
+                      <MessageSquare size={16} />
+                      My Reviews
+                    </Link>
+
+                    <Link
+                      href="/studio-reviews"
+                      className="flex items-center gap-2.5 px-3.5 py-2 text-xs text-[#49382E] transition hover:bg-[#F8F5F0]"
+                    >
+                      <Star size={16} />
+                      Reviews for My Studios
                     </Link>
                   </div>
 
@@ -492,6 +513,27 @@ export default function Navbar() {
               >
                 <CalendarCheck size={16} />
                 Manage Bookings
+              </Link>
+
+              {/* Mobile Review Links */}
+              <div className="my-1 border-t border-[#E8D9CC]" />
+
+              <Link
+                href="/my-reviews"
+                className="navbar-mobile-link flex items-center gap-2.5"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <MessageSquare size={16} />
+                My Reviews
+              </Link>
+
+              <Link
+                href="/studio-reviews"
+                className="navbar-mobile-link flex items-center gap-2.5"
+                onClick={() => setMobileMenuOpen(false)}
+              >
+                <Star size={16} />
+                Reviews for My Studios
               </Link>
 
               <button

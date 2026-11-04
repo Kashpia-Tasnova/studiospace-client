@@ -15,6 +15,8 @@ import {
   Loader2,
   LayoutDashboard,
   CalendarCheck,
+  MessageSquare,
+  Star,
 } from "lucide-react";
 import { toast } from "sonner";
 import { authClient } from "@/lib/auth-client";
@@ -46,6 +48,8 @@ interface Booking {
 interface DashboardData {
   studios: Studio[];
   bookings: Booking[];
+  myReviewsCount: number;
+  receivedReviewsCount: number;
 }
 
 function getStatusStyle(status: string) {
@@ -70,6 +74,8 @@ export default function DashboardPage() {
   const [dashboardData, setDashboardData] = useState<DashboardData>({
     studios: [],
     bookings: [],
+    myReviewsCount: 0,
+    receivedReviewsCount: 0,
   });
 
   const [isLoading, setIsLoading] = useState(true);
@@ -93,7 +99,12 @@ export default function DashboardPage() {
       }
 
       try {
-        const [studiosResponse, bookingsResponse] = await Promise.all([
+        const [
+          studiosResponse,
+          bookingsResponse,
+          myReviewsResponse,
+          receivedReviewsResponse,
+        ] = await Promise.all([
           fetch(`${API_URL}/api/studios/my-listings`, {
             credentials: "include",
             cache: "no-store",
@@ -102,13 +113,29 @@ export default function DashboardPage() {
             credentials: "include",
             cache: "no-store",
           }),
+          fetch(`${API_URL}/api/reviews/my-reviews`, {
+            credentials: "include",
+            cache: "no-store",
+          }),
+          fetch(`${API_URL}/api/reviews/received`, {
+            credentials: "include",
+            cache: "no-store",
+          }),
         ]);
 
-        const [studiosResult, bookingsResult] = await Promise.all([
+        const [
+          studiosResult,
+          bookingsResult,
+          myReviewsResult,
+          receivedReviewsResult,
+        ] = await Promise.all([
           studiosResponse.json(),
           bookingsResponse.json(),
+          myReviewsResponse.json(),
+          receivedReviewsResponse.json(),
         ]);
 
+        // Studio and booking information is required for the dashboard.
         if (!studiosResponse.ok || !bookingsResponse.ok) {
           throw new Error("Failed to load dashboard information.");
         }
@@ -122,9 +149,24 @@ export default function DashboardPage() {
             studios: Array.isArray(studiosResult.data)
               ? studiosResult.data
               : [],
+
             bookings: Array.isArray(bookingsResult.data)
               ? bookingsResult.data
               : [],
+
+            myReviewsCount:
+              myReviewsResponse.ok &&
+              myReviewsResult.success &&
+              Array.isArray(myReviewsResult.data)
+                ? myReviewsResult.data.length
+                : 0,
+
+            receivedReviewsCount:
+              receivedReviewsResponse.ok &&
+              receivedReviewsResult.success &&
+              Array.isArray(receivedReviewsResult.data)
+                ? receivedReviewsResult.data.length
+                : 0,
           });
         }
       } catch (error) {
@@ -197,6 +239,20 @@ export default function DashboardPage() {
       icon: Clock,
       description: "Awaiting confirmation",
       color: "bg-amber-50 text-amber-700",
+    },
+    {
+      title: "My Reviews",
+      value: dashboardData.myReviewsCount,
+      icon: MessageSquare,
+      description: "Reviews you have submitted",
+      color: "bg-purple-50 text-purple-700",
+    },
+    {
+      title: "Reviews for My Studios",
+      value: dashboardData.receivedReviewsCount,
+      icon: Star,
+      description: "Reviews received from customers",
+      color: "bg-[#fff4d8] text-[#9a701c]",
     },
   ];
 

@@ -1,4 +1,3 @@
-
 "use client";
 
 import { useMemo, useState } from "react";
@@ -79,9 +78,7 @@ export default function StudioListingClient({
     normalizeCategory(initialCategory)
   );
 
-  // Search filters results immediately while typing.
   const [searchInput, setSearchInput] = useState("");
-
   const [sortBy, setSortBy] = useState("newest");
   const [minPrice, setMinPrice] = useState("");
   const [maxPrice, setMaxPrice] = useState("");
@@ -131,7 +128,7 @@ export default function StudioListingClient({
       );
     }
 
-    // Search by studio name or location while typing
+    // Search by studio name or location.
     if (searchInput.trim()) {
       const searchValue = searchInput.trim().toLowerCase();
 
@@ -373,8 +370,6 @@ export default function StudioListingClient({
           <p className="mt-2 text-sm text-[#81756D]">
             Discover the perfect space for your creative projects.
           </p>
-
-          
         </div>
 
         <span className="rounded-full bg-[#EDE3D8] px-4 py-2 text-sm font-semibold text-[#795548]">
@@ -397,89 +392,111 @@ export default function StudioListingClient({
       ) : filteredStudios.length > 0 ? (
         /* STUDIO CARDS */
         <div className="grid grid-cols-1 gap-7 sm:grid-cols-2 lg:grid-cols-3">
-          {filteredStudios.map((studio) => (
-            <Link
-              key={studio._id}
-              href={`/studios/${studio._id}`}
-              className="group overflow-hidden rounded-2xl border border-[#E8D9CC] bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(32,32,32,0.12)]"
-            >
-              {/* Image */}
-              <div className="relative h-60 overflow-hidden bg-[#E8D9CC]">
-                <Image
-                  src={
-                    studio.images?.[0] ||
-                    studioImages[studio.category] ||
-                    studioImages.Photography
-                  }
-                  alt={studio.name}
-                  fill
-                  sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
-                  className="object-cover transition-transform duration-700 group-hover:scale-110"
-                />
+          {filteredStudios.map((studio) => {
+            const hasRating =
+              typeof studio.rating === "number" &&
+              (studio.reviewCount ?? 0) > 0;
 
-                <div className="absolute left-4 top-4 rounded-full bg-white/95 px-4 py-2 text-xs font-semibold text-[#795548] shadow-sm">
-                  {studio.category}
+            return (
+              <Link
+                key={studio._id}
+                href={`/studios/${studio._id}`}
+                className="group overflow-hidden rounded-2xl border border-[#E8D9CC] bg-white transition-all duration-300 hover:-translate-y-2 hover:shadow-[0_20px_45px_rgba(32,32,32,0.12)]"
+              >
+                {/* Image */}
+                <div className="relative h-60 overflow-hidden bg-[#E8D9CC]">
+                  <Image
+                    src={
+                      studio.images?.[0] ||
+                      studioImages[studio.category] ||
+                      studioImages.Photography
+                    }
+                    alt={studio.name}
+                    fill
+                    sizes="(max-width: 640px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                    className="object-cover transition-transform duration-700 group-hover:scale-110"
+                  />
+
+                  <div className="absolute left-4 top-4 rounded-full bg-white/95 px-4 py-2 text-xs font-semibold text-[#795548] shadow-sm">
+                    {studio.category}
+                  </div>
+
+                  <div className="absolute right-4 top-4 rounded-full bg-[#F5F0E8] px-3 py-2 text-xs font-semibold text-[#795548]">
+                    {studio.status === "available"
+                      ? "Available"
+                      : studio.status}
+                  </div>
                 </div>
 
-                <div className="absolute right-4 top-4 rounded-full bg-[#F5F0E8] px-3 py-2 text-xs font-semibold text-[#795548]">
-                  {studio.status === "available"
-                    ? "Available"
-                    : studio.status}
-                </div>
-              </div>
+                {/* Details */}
+                <div className="p-6">
+                  <div className="flex items-start justify-between gap-3">
+                    <h3 className="text-xl font-bold text-[#202020] transition-colors group-hover:text-[#795548]">
+                      {studio.name}
+                    </h3>
 
-              {/* Details */}
-              <div className="p-6">
-                <div className="flex items-start justify-between gap-3">
-                  <h3 className="text-xl font-bold text-[#202020] transition-colors group-hover:text-[#795548]">
-                    {studio.name}
-                  </h3>
+                    {hasRating ? (
+                      <div className="flex shrink-0 items-center gap-1 rounded-full bg-[#FFF4D8] px-3 py-2 text-xs font-bold text-[#8A641B]">
+                        <Star size={14} fill="currentColor" />
+                        {studio.rating!.toFixed(1)}
+                      </div>
+                    ) : (
+                      <div className="flex shrink-0 items-center gap-1 rounded-full bg-[#F5F0E8] px-3 py-2 text-xs font-semibold text-[#795548]">
+                        <Star size={14} />
+                        New
+                      </div>
+                    )}
+                  </div>
 
-                  {typeof studio.rating === "number" && (
-                    <div className="flex shrink-0 items-center gap-1 rounded-full bg-[#FFF4D8] px-3 py-2 text-xs font-bold text-[#8A641B]">
-                      <Star size={14} fill="currentColor" />
-                      {studio.rating.toFixed(1)}
-                    </div>
+                  {hasRating ? (
+                    <p className="mt-2 text-xs text-[#81756D]">
+                      {studio.reviewCount}{" "}
+                      {studio.reviewCount === 1 ? "review" : "reviews"}
+                    </p>
+                  ) : (
+                    <p className="mt-2 text-xs text-[#A0958D]">
+                      No ratings yet
+                    </p>
                   )}
-                </div>
 
-                <p className="mt-3 flex items-center gap-2 text-sm text-[#81756D]">
-                  <MapPin size={16} className="shrink-0 text-[#A67C63]" />
-                  {studio.location}
-                </p>
+                  <p className="mt-3 flex items-center gap-2 text-sm text-[#81756D]">
+                    <MapPin size={16} className="shrink-0 text-[#A67C63]" />
+                    {studio.location}
+                  </p>
 
-                <p className="mt-4 line-clamp-2 min-h-12 text-sm leading-6 text-[#71665F]">
-                  {studio.description}
-                </p>
+                  <p className="mt-4 line-clamp-2 min-h-12 text-sm leading-6 text-[#71665F]">
+                    {studio.description}
+                  </p>
 
-                <div className="my-5 border-t border-[#E8D9CC]" />
+                  <div className="my-5 border-t border-[#E8D9CC]" />
 
-                <div className="flex items-center justify-between gap-3">
-                  <div>
-                    <p className="text-xs text-[#81756D]">
-                      Starting from
-                    </p>
+                  <div className="flex items-center justify-between gap-3">
+                    <div>
+                      <p className="text-xs text-[#81756D]">
+                        Starting from
+                      </p>
 
-                    <p className="mt-1 text-xl font-bold text-[#795548]">
-                      ${studio.price.toLocaleString("en-US")}
-                      <span className="text-xs font-normal text-[#81756D]">
-                        {" "}/ hour
-                      </span>
-                    </p>
+                      <p className="mt-1 text-xl font-bold text-[#795548]">
+                        ${studio.price.toLocaleString("en-US")}
+                        <span className="text-xs font-normal text-[#81756D]">
+                          {" "}/ hour
+                        </span>
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-1.5 rounded-full bg-[#F5F0E8] px-3 py-2 text-xs font-medium text-[#795548]">
+                      <Users size={15} />
+                      {studio.capacity} people
+                    </div>
                   </div>
 
-                  <div className="flex items-center gap-1.5 rounded-full bg-[#F5F0E8] px-3 py-2 text-xs font-medium text-[#795548]">
-                    <Users size={15} />
-                    {studio.capacity} people
+                  <div className="mt-6 flex items-center justify-center rounded-xl bg-[#F5F0E8] px-4 py-3 text-sm font-semibold text-[#795548] transition-all duration-300 group-hover:bg-[#A67C63] group-hover:text-white">
+                    View Studio Details
                   </div>
                 </div>
-
-                <div className="mt-6 flex items-center justify-center rounded-xl bg-[#F5F0E8] px-4 py-3 text-sm font-semibold text-[#795548] transition-all duration-300 group-hover:bg-[#A67C63] group-hover:text-white">
-                  View Studio Details
-                </div>
-              </div>
-            </Link>
-          ))}
+              </Link>
+            );
+          })}
         </div>
       ) : (
         /* NO RESULTS */

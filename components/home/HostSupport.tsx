@@ -1,11 +1,13 @@
-
+"use client";
 import Link from "next/link";
+import { useRouter } from "next/navigation";
 import {
   ShieldCheck,
   BadgeCheck,
   Wrench,
   Headset,
 } from "lucide-react";
+import { authClient } from "@/lib/auth-client";
 
 const hostBenefits = [
   {
@@ -38,6 +40,19 @@ const creatorBenefits = [
 ];
 
 export default function HostSupport() {
+  const router = useRouter();
+  const { data: session, isPending } = authClient.useSession();
+
+  const handleBecomeHost = () => {
+    if (isPending) return;
+
+    if (session?.user) {
+      router.push("/add-studio");
+    } else {
+      router.push("/login?callbackURL=%2Fadd-studio");
+    }
+  };
+
   return (
     <section className="bg-white px-5 py-20 sm:px-8 lg:px-16 lg:py-28">
       <div className="mx-auto max-w-7xl">
@@ -108,12 +123,14 @@ export default function HostSupport() {
               })}
             </div>
 
-        <Link
-           href="/register"
-           className="mt-9 inline-flex items-center rounded-xl bg-[#A67C63] px-6 py-3.5 text-sm font-semibold !text-white no-underline transition-all duration-300 hover:bg-[#202020] hover:!text-white"
-           >
-             Become a Host
-        </Link>
+     <button
+  type="button"
+  onClick={handleBecomeHost}
+  disabled={isPending}
+  className="mt-9 inline-flex items-center justify-center gap-3 rounded-[5px] border border-[#795548] bg-[#795548] px-[26px] py-[15px] text-sm font-bold text-white transition-all duration-[250ms] ease-in-out hover:-translate-y-[3px] hover:bg-[#202020] hover:text-white hover:ring-2 hover:ring-[#795548] hover:ring-offset-2 hover:ring-offset-[#F8F5F0] focus-visible:-translate-y-[3px] focus-visible:bg-[#202020] focus-visible:ring-2 focus-visible:ring-[#795548] focus-visible:ring-offset-2 focus-visible:ring-offset-[#F8F5F0] disabled:cursor-not-allowed disabled:opacity-60"
+>
+  Become a Host
+</button>
           </div>
 
           {/* Creator Support */}
@@ -159,12 +176,9 @@ export default function HostSupport() {
               })}
             </div>
 
-          <Link
-             href="/studios"
-             className="mt-9 inline-flex items-center rounded-xl bg-[#A67C63] px-6 py-3.5 text-sm font-semibold !text-white no-underline transition-all duration-300 hover:bg-[#F5F0E8] hover:!text-[#795548]"
-          >
+           <Link href="/studios" className="hero-button mt-9">
              Explore Studios
-          </Link>
+         </Link>
           </div>
 
         </div>

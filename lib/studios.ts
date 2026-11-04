@@ -1,4 +1,3 @@
-
 export interface Studio {
   _id: string;
   name: string;
@@ -9,16 +8,22 @@ export interface Studio {
   securityDeposit?: number;
   capacity: number;
   status: string;
-  rating?: number;
+
+  // Genuine customer ratings
+  rating?: number | null;
+  reviewCount?: number;
+
   createdAt?: string;
   images?: string[];
   amenities?: string[];
+
   host?: {
     name: string;
     email: string;
     profileImage?: string;
   };
 }
+
 interface StudiosApiResponse {
   success: boolean;
   message: string;
@@ -49,7 +54,7 @@ async function fetchStudios(endpoint: string): Promise<Studio[]> {
   return result.data;
 }
 
-// Get all studios (for the Explore Studios page)
+// Get all studios
 export async function getStudios(): Promise<Studio[]> {
   try {
     return await fetchStudios("");
@@ -59,7 +64,7 @@ export async function getStudios(): Promise<Studio[]> {
   }
 }
 
-// Get the 6 newest available studios (for the homepage)
+// Get the 6 newest available studios
 export async function getFeaturedStudios(): Promise<Studio[]> {
   try {
     return await fetchStudios("/featured");
@@ -69,7 +74,7 @@ export async function getFeaturedStudios(): Promise<Studio[]> {
   }
 }
 
-// Get a single studio by ID (for the Studio Details page)
+// Get a single studio by ID
 export async function getStudioById(id: string): Promise<Studio> {
   if (!API_URL) {
     throw new Error("API URL is not configured");

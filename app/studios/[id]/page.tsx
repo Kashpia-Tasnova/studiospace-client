@@ -1,4 +1,3 @@
-
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import {
@@ -29,6 +28,7 @@ import {
 
 import { getStudioById } from "@/lib/studios";
 import StudioGallery from "@/components/studios/StudioGallery";
+import StudioReviews from "@/components/studios/StudioReviews";
 
 const studioImages: Record<string, string> = {
   Photography:
@@ -136,11 +136,19 @@ export default async function StudioDetailsPage({
                 </h1>
               </div>
 
-              {typeof studio.rating === "number" && (
+              {typeof studio.rating === "number" &&
+              (studio.reviewCount ?? 0) > 0 ? (
                 <div className="flex w-fit shrink-0 items-center gap-2 rounded-xl bg-[#FFF4D8] px-4 py-3 text-sm font-bold text-[#8A641B]">
                   <Star size={18} fill="currentColor" />
                   {studio.rating.toFixed(1)}
-                  <span className="font-normal">/ 5</span>
+                  <span className="font-normal">
+                    / 5 ({studio.reviewCount} reviews)
+                  </span>
+                </div>
+              ) : (
+                <div className="flex w-fit shrink-0 items-center gap-2 rounded-xl bg-[#F5F0E8] px-4 py-3 text-sm font-semibold text-[#795548]">
+                  <Star size={18} />
+                  New · No ratings yet
                 </div>
               )}
             </div>
@@ -321,11 +329,11 @@ export default async function StudioDetailsPage({
               {/* Booking Button */}
               {studio.status === "available" ? (
                 <Link
-  href={`/studios/${id}/book`}
-  className="mt-7 block w-full rounded-xl bg-[#A67C63] px-5 py-4 text-center !text-white text-sm font-semibold transition-all duration-300 hover:bg-[#202020] hover:!text-white"
->
-  Book This Studio
-</Link>
+                  href={`/studios/${id}/book`}
+                  className="mt-7 block w-full rounded-xl bg-[#A67C63] px-5 py-4 text-center !text-white text-sm font-semibold transition-all duration-300 hover:bg-[#202020] hover:!text-white"
+                >
+                  Book This Studio
+                </Link>
               ) : (
                 <button
                   type="button"
@@ -338,6 +346,9 @@ export default async function StudioDetailsPage({
             </div>
           </aside>
         </div>
+
+        {/* Customer Ratings and Reviews */}
+        <StudioReviews studioId={id} />
       </div>
     </main>
   );

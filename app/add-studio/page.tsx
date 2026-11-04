@@ -50,6 +50,14 @@ export default function AddStudioPage() {
   const { data: session, isPending } = authClient.useSession();
   const user = session?.user;
 
+  useEffect(() => {
+  if (!isPending && !user) {
+    router.replace(
+      `/login?callbackURL=${encodeURIComponent("/add-studio")}`
+    );
+  }
+}, [isPending, user, router]);
+
   const [name, setName] = useState("");
   const [category, setCategory] = useState("");
   const [price, setPrice] = useState("");
@@ -250,14 +258,13 @@ export default function AddStudioPage() {
     }
   }
 
-  if (isPending) {
-    return (
-      <main className="flex min-h-screen items-center justify-center bg-[#f8f5f1]">
-        <Loader2 className="h-8 w-8 animate-spin text-[#604438]" />
-      </main>
-    );
-  }
-
+ if (isPending || !user) {
+  return (
+    <main className="flex min-h-screen items-center justify-center bg-[#f8f5f1]">
+      <Loader2 className="h-8 w-8 animate-spin text-[#604438]" />
+    </main>
+  );
+}
   if (!user) {
     return (
       <main className="flex min-h-screen items-center justify-center bg-[#f8f5f1] px-4">

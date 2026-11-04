@@ -878,9 +878,11 @@ img {
   transition: all 0.25s ease;
 }
 
-.hero-button:hover {
-  background: var(--color-charcoal);
-  border-color: var(--color-white);
+.hero-button:hover,
+.hero-button:focus-visible {
+  background: var(--color-charcoal) !important;
+  border: 1px solid #FFFFFF !important;
+  color: #FFFFFF !important;
   transform: translateY(-3px);
 }
 
